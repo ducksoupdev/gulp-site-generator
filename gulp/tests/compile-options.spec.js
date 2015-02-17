@@ -1,0 +1,155 @@
+(function () {
+    'use strict';
+
+    var compileOptions = require('../lib/compile-options'),
+        Handlebars = require('handlebars'),
+        expect = require('chai').expect;
+
+    describe('Given the compile options', function() {
+        describe('When using the date helper', function() {
+            beforeEach(function() {
+                Handlebars.registerHelper('date', compileOptions('.').helpers.date);
+                this.html = "<span>{{date format='MMM Do, YYYY'}}</span>";
+            });
+
+            it('Should format the date as MMM Do, YYYY', function() {
+                var template = Handlebars.compile(this.html);
+                var result = template({
+                    date: '2015-09-15'
+                });
+                expect(result).to.equal('<span>Sep 15th, 2015</span>');
+            });
+        });
+
+        describe('When using the excerpt helper', function() {
+            describe('When using the excerpt helper with characters', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('excerpt', compileOptions('.').helpers.excerpt);
+                    this.html = "<p>{{{excerpt characters=100}}}...</p>";
+                });
+
+                it('Should return an excerpt of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: 'Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake po...</p>');
+                });
+            });
+
+            describe('When using the excerpt helper with words', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('excerpt', compileOptions('.').helpers.excerpt);
+                    this.html = "<p>{{{excerpt words=20}}}...</p>";
+                });
+
+                it('Should return an excerpt of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: 'Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw...</p>');
+                });
+            });
+
+            describe('When using the excerpt helper without words or characters', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('excerpt', compileOptions('.').helpers.excerpt);
+                    this.html = "<p>{{{excerpt}}}...</p>";
+                });
+
+                it('Should return an excerpt of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: 'Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut....</p>');
+                });
+            });
+        });
+
+        describe('When using the content helper', function() {
+            describe('When using the content helper with characters', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('content', compileOptions('.').helpers.content);
+                    this.html = "{{{content characters=100}}}";
+                });
+
+                it('Should return an content of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: '<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.</p>'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake po</p>');
+                });
+            });
+
+            describe('When using the content helper with words', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('content', compileOptions('.').helpers.content);
+                    this.html = "{{{content words=20}}}";
+                });
+
+                it('Should return an content of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: '<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.</p>'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw</p>');
+                });
+            });
+
+            describe('When using the content helper without words or characters', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('content', compileOptions('.').helpers.content);
+                    this.html = "{{{content}}}";
+                });
+
+                it('Should return an content of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: '<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.</p>'
+                    });
+                    expect(result).to.equal('<p>Gingerbread marshmallow fruitcake topping jelly-o halvah. Dragée icing cheesecake. Apple pie cake powder biscuit gingerbread tart gingerbread bonbon. Bear claw danish cake pie gummi bears macaroon tart jujubes toffee Candy canes brownie oat cake gummi bears cupcake powder donut.</p>');
+                });
+            });
+
+            describe('When using the content helper with no words', function() {
+                beforeEach(function() {
+                    Handlebars.registerHelper('content', compileOptions('.').helpers.content);
+                    this.html = "{{{content words=0}}}";
+                });
+
+                it('Should return an content of the given text', function() {
+                    var template = Handlebars.compile(this.html);
+                    var result = template({
+                        description: '<p><img src="test.png" alt=""><span>Image</span></p>'
+                    });
+                    expect(result).to.equal('<p><img src="test.png" alt=""><span></span></p>');
+                });
+            });
+        });
+
+        describe('When using the resolve helper', function() {
+            beforeEach(function() {
+                Handlebars.registerHelper('resolve', compileOptions('.').helpers.resolve);
+                this.html = '<link rel="shortcut icon" href="{{resolve "/favicon.ico"}}">';
+            });
+
+            it('Should return a resolved path', function() {
+                var template = Handlebars.compile(this.html);
+                var result = template({
+                    resourcePath: '..'
+                });
+                expect(result).to.equal('<link rel="shortcut icon" href="../favicon.ico">');
+            });
+
+            it('Should return a resolved path if no resourcePath is set', function() {
+                var template = Handlebars.compile(this.html);
+                var result = template({});
+                expect(result).to.equal('<link rel="shortcut icon" href="./favicon.ico">');
+            });
+        });
+    });
+
+})();
