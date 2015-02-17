@@ -1,0 +1,17 @@
+{
+  "title": "",
+  "description": "",
+  "url": "",
+  "rss": "/rss.xml",
+  "maxItems": 6,
+  "concatJs": [
+    "./src/js/*.js"
+  ],
+  "styleSheet": "style.css",
+  "authors": {
+    "Matt Levy": {
+      "name": "Matt Levy",
+      "bio": "Practicing the art of front-end development"
+    }
+  }
+}
