@@ -22,11 +22,19 @@ This project is ideal when used as a Git sub-module or installed along-side your
     $ cd my-static-site
     $ git clone git@github.com:ducksoupdev/gulp-site-generator.git tools
 
-###Copying the package.json and gulpfile.js
+###Installing the dependencies
 
-Before using the generator, you need to copy the `package.json` and `gulpfile.js` files to the root folder of your site.
+Before using the generator, three dependent files are needed in the root of your site:
 
-Once copied, you need to install Node dependencies:
+* `package.json` - the node modules required by the generator
+* `gulpfile.js` - the gulp file for all the generator tasks
+* `site.json` - the meta data for your site
+
+Installing the dependent files is done with the install script:
+
+    $ node tools/install
+
+Once copied, the next thing is to install the required node modules:
 
     $ npm install
 
