@@ -105,7 +105,8 @@
                             error();
                         });
                 } else {
-                    error(new Error('No pages to compile to a home page'));
+                    console.warn('No pages to compile to a home page');
+                    done();
                 }
             }
         });

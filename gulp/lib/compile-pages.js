@@ -86,7 +86,8 @@
                             error(err);
                         });
                 } else {
-                    error(new Error('No files to compile'));
+                    console.warn('No files to compile');
+                    done();
                 }
             }
         });

@@ -117,7 +117,8 @@
                             error(err);
                         });
                 } else {
-                    error(new Error('No pages to compile to tag pages'));
+                    console.warn('No pages to compile to tag pages');
+                    done();
                 }
             }
         });

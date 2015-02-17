@@ -37,38 +37,44 @@
                     posts.push(metaData);
                 });
 
-                var feed = new RSS({
-                    title: siteData.title,
-                    description: siteData.description,
-                    generator: "Gulp " + gulpVersion,
-                    site_url: siteData.url,
-                    feed_url: siteData.url + "/rss.xml",
-                    ttl: 60
-                });
+                if (posts.length) {
 
-                posts.sort(function(a, b) {
-                    return new Date(a.date).getTime() < new Date(b.date).getTime();
-                });
-
-                posts.forEach(function(item) {
-                    feed.item({
-                        title: item.title,
-                        description: item.description,
-                        url: item.url,
-                        guid: item.url,
-                        categories: item.tags,
-                        date: moment(item.date, "YYYY-MM-DD").toDate()
+                    var feed = new RSS({
+                        title: siteData.title,
+                        description: siteData.description,
+                        generator: "Gulp " + gulpVersion,
+                        site_url: siteData.url,
+                        feed_url: siteData.url + "/rss.xml",
+                        ttl: 60
                     });
-                });
 
-                var xml = feed.xml();
+                    posts.sort(function (a, b) {
+                        return new Date(a.date).getTime() < new Date(b.date).getTime();
+                    });
 
-                fs.writeFile(rootPath + "/build/rss.xml", xml, { encoding: "utf8" }, function(err) {
-                    if (err) {
-                        error(err);
-                    }
+                    posts.forEach(function (item) {
+                        feed.item({
+                            title: item.title,
+                            description: item.description,
+                            url: item.url,
+                            guid: item.url,
+                            categories: item.tags,
+                            date: moment(item.date, "YYYY-MM-DD").toDate()
+                        });
+                    });
+
+                    var xml = feed.xml();
+
+                    fs.writeFile(rootPath + "/build/rss.xml", xml, {encoding: "utf8"}, function (err) {
+                        if (err) {
+                            error(err);
+                        }
+                        done();
+                    });
+                } else {
+                    console.warn('No posts for an RSS feed');
                     done();
-                });
+                }
             }
         });
     };
