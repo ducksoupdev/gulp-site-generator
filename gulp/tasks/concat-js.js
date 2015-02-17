@@ -4,14 +4,16 @@
     var gulp = require('gulp'),
         concat = require('gulp-concat'),
         uglify = require('gulp-uglify'),
-        rename = require('gulp-rename');
+        rename = require('gulp-rename'),
+        fs = require('fs');
 
     gulp.task('concat-js', function() {
-        return gulp.src([
-            './src/libs/masonry/dist/masonry.pkgd.js',
-            './src/libs/imagesloaded/imagesloaded.pkgd.js',
-            './src/libs/atomic/dist/atomic.js',
-            './src/js/script.js'])
+        var siteData = JSON.parse(fs.readFileSync("./site.json", "utf8"));
+        var jsFiles = ['./src/js/*.js'];
+        if (siteData.concatJs) {
+            jsFiles = siteData.concatJs;
+        }
+        return gulp.src(jsFiles)
             .pipe(concat('combined.js'))
             .pipe(uglify())
             .pipe(rename({
