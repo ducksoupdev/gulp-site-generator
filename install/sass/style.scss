@@ -1,0 +1,66 @@
+@mixin clearfix() {
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+  }
+}
+
+body {
+  font-family: sans-serif;
+}
+
+.container {
+  @include clearfix();
+}
+
+.top-nav {
+
+}
+
+.post {
+  .post-meta {
+
+  }
+}
+
+.sidebar {
+  ol {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
+
+.row {
+  @include clearfix();
+}
+
+@media screen and (min-width: 768px) {
+
+  .main, article {
+    float: left;
+    width: 61%;
+  }
+
+  aside {
+    float: right;
+    width: 35%;
+  }
+
+}
+
+@media screen and (min-width: 992px) {
+
+  html {
+    background-color: #eee;
+  }
+
+  body {
+    max-width: 992px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 15px;
+  }
+
+}

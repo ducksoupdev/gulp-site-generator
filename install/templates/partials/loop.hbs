@@ -1,0 +1,11 @@
+{{#each posts}}
+    <div class="post">
+        <h2><a href="{{url}}">{{title}}</a></h2>
+        {{#if date}}
+            <p class="post-meta">
+                {{date format="MMMM Do YYYY"}}
+            </p>
+        {{/if}}
+        <p>{{{excerpt characters=230}}}...</p>
+    </div>
+{{/each}}

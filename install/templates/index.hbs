@@ -1,0 +1,23 @@
+{{> header}}
+
+{{> navigation}}
+
+<div class="container">
+
+    <header>
+        <h1>{{site.title}}</h1>
+        <p>{{site.description}}</p>
+    </header>
+
+    <div class="row">
+        <div class="main">
+            {{> loop}}
+        </div>
+        <aside>
+            {{> sidebar}}
+        </aside>
+    </div>
+
+</div>
+
+{{> footer}}

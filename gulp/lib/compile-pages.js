@@ -40,7 +40,8 @@
                         tags: (fileData.tags ? tags.getTagsAsLinks("..", fileData.tags) : undefined),
                         date: fileData.date,
                         post_class: "post " + (/pages\//.test(file) ? "page " : "") + (fileData.tags ? tagClasses : fileData.slug),
-                        author: (fileData.author ? siteData.authors[fileData.author] : '')
+                        author: (fileData.author ? siteData.authors[fileData.author] : ''),
+                        meta: fileData
                     };
 
                     // post class

@@ -1,0 +1,21 @@
+{{> header}}
+
+{{> navigation}}
+
+<div class="container">
+
+    {{#post}}
+    <div class="row">
+        <article>
+            <h1>{{title}}</h1>
+            {{{body}}}
+        </article>
+        <aside>
+            {{> sidebar}}
+        </aside>
+    </div>
+    {{/post}}
+
+</div>
+
+{{> footer}}

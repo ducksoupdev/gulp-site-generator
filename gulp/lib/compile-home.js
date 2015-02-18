@@ -37,7 +37,8 @@
                         url: "./" + fileData.slug + "/",
                         tags: (fileData.tags ? tags.getTagsAsLinks(".", fileData.tags) : undefined),
                         date: fileData.date,
-                        post_class: "post " + (/\/pages\//.test(file) ? 'page ' : '') + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug)
+                        post_class: "post " + (/\/pages\//.test(file) ? 'page ' : '') + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
+                        meta: fileData
                     };
 
                     posts.push(metaData);

@@ -39,7 +39,8 @@
                             url: "../../" + fileData.slug + "/",
                             tags: (fileData.tags ? tags.getTagsAsLinks("../..", fileData.tags) : undefined),
                             date: fileData.date,
-                            post_class: "post" + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug)
+                            post_class: "post" + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
+                            meta: fileData
                         };
 
                         var tagList = fileData.tags.split(" ");
