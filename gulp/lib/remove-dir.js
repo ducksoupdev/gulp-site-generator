@@ -10,7 +10,7 @@
         try {
             var files = fs.readdirSync(dirPath);
         } catch (e) {
-            return;
+            return e;
         }
 
         if (files.length > 0) {

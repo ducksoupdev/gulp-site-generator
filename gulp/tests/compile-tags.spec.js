@@ -119,7 +119,26 @@
             });
         });
 
-        describe('When an error occurs with the promises', function() {
+        describe('When there are no posts for the tag pages', function() {
+            beforeEach(function(done) {
+                removeDir(rootPath);
+                fs.mkdirSync(rootPath);
+                fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
+                compileTags.run(rootPath, function() {
+                    doneStub();
+                    done();
+                }, function() {
+                    errorStub();
+                    done();
+                });
+            });
+
+            it('Should call done', function() {
+                expect(doneStub.called).to.be.true;
+            });
+        });
+
+        xdescribe('When an error occurs with the promises', function() {
             beforeEach(function(done) {
                 removeDir(rootPath);
                 fs.mkdirSync(rootPath);

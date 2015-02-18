@@ -101,11 +101,10 @@
                     Promise.all(promises)
                         .then(function () {
                             done();
-                        }, function() {
-                            error();
+                        }, function(err) {
+                            error(err);
                         });
                 } else {
-                    console.warn('No pages to compile to a home page');
                     done();
                 }
             }

@@ -67,8 +67,27 @@
             });
         });
 
+        describe('When there are no posts for the RSS feed', function() {
+            beforeEach(function(done) {
+                removeDir(rootPath);
+                fs.mkdirSync(rootPath);
+                fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
+                compileRss.run(rootPath, function() {
+                    doneStub();
+                    done();
+                }, function() {
+                    errorStub();
+                    done();
+                });
+            });
+
+            it('Should call done', function() {
+                expect(doneStub.called).to.be.true;
+            });
+        });
+
         describe('When a fs writeFile error occurs', function() {
-            var fsStub, newCompileRss;
+            var fsStub, globStub, newCompileRss;
 
             before(function(done) {
                 removeDir(rootPath);
@@ -80,6 +99,10 @@
                     warnOnUnregistered: false,
                     useCleanCache: true
                 });
+
+                globStub = function(paths, options, callback) {
+                    callback(null, ['./file1', './file2', '/file3']);
+                };
 
                 fsStub = {
                     readdir: function(path, callback) {
@@ -96,6 +119,7 @@
                 };
 
                 mockery.registerMock('fs', fsStub);
+                mockery.registerMock('glob', globStub);
 
                 newCompileRss = require('../lib/compile-rss');
 

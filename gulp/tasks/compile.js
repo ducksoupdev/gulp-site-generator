@@ -36,6 +36,9 @@
             .then(function () {
                 removeDir('./build/content');
                 done();
+            }, function () {
+                // call done even if there are errors
+                done();
             });
     });
 

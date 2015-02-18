@@ -72,7 +72,6 @@
                         done();
                     });
                 } else {
-                    console.warn('No posts for an RSS feed');
                     done();
                 }
             }
