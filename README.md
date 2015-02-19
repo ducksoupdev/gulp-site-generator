@@ -14,6 +14,7 @@ It is similar to other static site generators in that it takes your Markdown con
 * Asset copying
 * Image compression
 * HTML compression
+* RSS feed creation
 * Server for viewing built site
 * Clobber for cleaning build directory
 * Save content as draft
