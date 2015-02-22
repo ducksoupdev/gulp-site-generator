@@ -1,6 +1,7 @@
 # Static site generator using Gulp
 
 [![Build Status](https://travis-ci.org/ducksoupdev/gulp-site-generator.svg?branch=master)](https://travis-ci.org/ducksoupdev/gulp-site-generator)
+[![Coverage Status](https://coveralls.io/repos/ducksoupdev/gulp-site-generator/badge.svg?branch=master)](https://coveralls.io/r/ducksoupdev/gulp-site-generator?branch=master)
 
 This is a simple static site generator which is perfect for a personal, blog or documentation site.
 
