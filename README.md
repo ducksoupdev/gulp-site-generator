@@ -1,5 +1,7 @@
 # Static site generator using Gulp
 
+[![Build Status](https://travis-ci.org/ducksoupdev/gulp-site-generator.svg?branch=master)](https://travis-ci.org/ducksoupdev/gulp-site-generator)
+
 This is a simple static site generator which is perfect for a personal, blog or documentation site.
 
 It is similar to other static site generators in that it takes your Markdown content, renders it, optimises it and creates a production-ready site that can be served by Nginx, Apache or another web server.
