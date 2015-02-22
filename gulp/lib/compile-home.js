@@ -22,7 +22,7 @@
             if (err) {
                 error(err);
             } else {
-                var posts = [];
+                var posts = [], pages = [];
 
                 files.forEach(function(file) {
                     var fileData = JSON.parse(fs.readFileSync(file, "utf8"));
@@ -41,10 +41,14 @@
                         meta: fileData
                     };
 
-                    posts.push(metaData);
+                    if (/\/pages\//.test(file)) {
+                        pages.push(metaData);
+                    } else {
+                        posts.push(metaData);
+                    }
                 });
 
-                if (posts.length) {
+                if (posts.length || pages.length) {
                     posts.sort(function(a, b) {
                         return new Date(a.date).getTime() < new Date(b.date).getTime();
                     });
@@ -57,6 +61,7 @@
                         url: ".",
                         site: siteData,
                         posts: posts,
+                        pages: pages,
                         body_class: "home-template",
                         rss: "." + siteData.rss
                     };

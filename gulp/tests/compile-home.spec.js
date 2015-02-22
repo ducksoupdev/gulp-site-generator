@@ -40,7 +40,7 @@
 
             // set-up files:
             fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
-            fs.writeFileSync(rootPath + '/src/templates/partials/loop.hbs', '{{#each posts}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}', {encoding: 'utf8'});
+            fs.writeFileSync(rootPath + '/src/templates/partials/loop.hbs', '{{#each pages}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}{{#each posts}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}', {encoding: 'utf8'});
             fs.writeFileSync(rootPath + '/src/templates/index.hbs', '<div><ul>{{> loop}}</ul></div>', {encoding: 'utf8'});
         });
 
@@ -81,11 +81,12 @@
                 fs.writeFileSync(rootPath + '/build/content/posts/test-post3.json', '{"slug":"test-post3","title":"Test post 3","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 fs.writeFileSync(rootPath + '/build/content/posts/test-post4.json', '{"slug":"test-post4","title":"Test post 4","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 fs.writeFileSync(rootPath + '/build/content/posts/test-post5.json', '{"slug":"test-post5","title":"Test post 5","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post6.json', '{"slug":"test-post6","title":"Test post 6","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 compileHome.run(rootPath, done, errorStub);
             });
 
             it('Should have the correct home page content', function () {
-                expect(fs.readFileSync(rootPath + '/build/index.html', 'utf8')).to.equal('<div><ul><li><a href="./test-page/">Test page</a></li><li><a href="./test-post1/">Test post 1</a></li></ul></div>');
+                expect(fs.readFileSync(rootPath + '/build/index.html', 'utf8')).to.equal('<div><ul><li><a href="./test-page/">Test page</a></li><li><a href="./test-post1/">Test post 1</a></li><li><a href="./test-post2/">Test post 2</a></li></ul></div>');
             });
 
             it('Should create the second paginated home page', function () {
@@ -97,11 +98,11 @@
             });
 
             it('Should have the correct home page content for the second paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/pagination/index/2/index.html', 'utf8')).to.equal('<li><a href="./test-post2/">Test post 2</a></li><li><a href="./test-post3/">Test post 3</a></li>');
+                expect(fs.readFileSync(rootPath + '/build/pagination/index/2/index.html', 'utf8')).to.equal('<li><a href="./test-post3/">Test post 3</a></li><li><a href="./test-post4/">Test post 4</a></li>');
             });
 
             it('Should have the correct home page content for the third paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/pagination/index/3/index.html', 'utf8')).to.equal('<li><a href="./test-post4/">Test post 4</a></li><li><a href="./test-post5/">Test post 5</a></li>');
+                expect(fs.readFileSync(rootPath + '/build/pagination/index/3/index.html', 'utf8')).to.equal('<li><a href="./test-post5/">Test post 5</a></li><li><a href="./test-post6/">Test post 6</a></li>');
             });
         });
 
