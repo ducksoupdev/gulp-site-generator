@@ -51,8 +51,8 @@
 
         describe('When compiling tag pages', function () {
             before(function (done) {
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","tags":"mocha coke","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","date":"2014-06-11","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","date":"2014-12-05","tags":"mocha coke","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 compileTags.run(rootPath, done, errorStub);
             });
 
@@ -65,7 +65,7 @@
             });
 
             it('Should have the correct mocha tag page content', function () {
-                expect(fs.readFileSync(rootPath + '/build/tag/mocha/index.html', 'utf8')).to.equal('<div><ul><li><a href="../../test-post1/">Test post 1</a></li><li><a href="../../test-post2/">Test post 2</a></li></ul></div>');
+                expect(fs.readFileSync(rootPath + '/build/tag/mocha/index.html', 'utf8')).to.equal('<div><ul><li><a href="../../test-post2/">Test post 2</a></li><li><a href="../../test-post1/">Test post 1</a></li></ul></div>');
             });
 
             it('Should have the correct coke tag page content', function () {
@@ -73,11 +73,54 @@
             });
         });
 
+        describe('When an error occurs with the promises', function() {
+            var promisesListStub, newCompileTags;
+
+            beforeEach(function(done) {
+                errorStub.reset();
+
+                mockery.enable({
+                    warnOnReplace: false,
+                    warnOnUnregistered: false,
+                    useCleanCache: true
+                });
+
+                mockery.deregisterAll();
+
+                promisesListStub = {
+                    filter: function() {
+                        return [Promise.reject('An error occurred')];
+                    }
+                };
+
+                mockery.registerMock('../lib/promises', promisesListStub);
+
+                newCompileTags = require('../lib/compile-tags');
+
+                newCompileTags.run(rootPath, function() {
+                    done();
+                }, function(err) {
+                    errorStub(err);
+                    done();
+                });
+
+            });
+
+            it('Should call the error function', function() {
+                expect(errorStub.called).to.be.true;
+            });
+
+            afterEach(function() {
+                mockery.deregisterMock('../lib/promises');
+                mockery.disable();
+            });
+        });
+
         describe('When compiling tag pages and excluding draft templates', function () {
             before(function (done) {
                 removeDir(rootPath + '/build/tag');
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","tags":"mocha coke","status":"draft","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","date":"2014-06-11","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","date":"2014-12-05","status":"draft","tags":"mocha coke","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 compileTags.run(rootPath, done, errorStub);
             });
 
@@ -89,12 +132,13 @@
         describe('When compiling tag posts with pagination', function () {
             before(function (done) {
                 fs.writeFileSync(rootPath + '/site.json', '{ "title": "Test site", "maxItems": "2" }', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post3.json', '{"slug":"test-post3","title":"Test post 3","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post4.json', '{"slug":"test-post4","title":"Test post 4","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post5.json', '{"slug":"test-post5","title":"Test post 5","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post6.json', '{"slug":"test-post6","title":"Test post 6","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post1.json', '{"slug":"test-post1","title":"Test post 1","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post2.json', '{"slug":"test-post2","title":"Test post 2","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post3.json', '{"slug":"test-post3","title":"Test post 3","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post4.json', '{"slug":"test-post4","title":"Test post 4","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post5.json', '{"slug":"test-post5","title":"Test post 5","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post6.json', '{"slug":"test-post6","title":"Test post 6","date":"2014-12-05","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post7.json', '{"slug":"test-post7","title":"Test post 7","tags":"mocha","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 compileTags.run(rootPath, done, errorStub);
             });
 
@@ -138,22 +182,6 @@
             });
         });
 
-        xdescribe('When an error occurs with the promises', function() {
-            beforeEach(function(done) {
-                removeDir(rootPath);
-                fs.mkdirSync(rootPath);
-                fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
-                compileTags.run(rootPath, done, function() {
-                    errorStub();
-                    done();
-                });
-            });
-
-            it('Should call the error function', function() {
-                expect(errorStub.called).to.be.true;
-            });
-        });
-
         describe('When a glob error occurs', function() {
             var globStub, newCompileTags;
 
@@ -167,6 +195,8 @@
                     warnOnUnregistered: false,
                     useCleanCache: true
                 });
+
+                mockery.deregisterAll();
 
                 globStub = function(paths, options, callback) {
                     callback({
@@ -195,6 +225,7 @@
             });
 
             afterEach(function() {
+                mockery.deregisterMock('glob');
                 mockery.disable();
             });
         });

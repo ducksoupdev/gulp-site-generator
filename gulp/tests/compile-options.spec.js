@@ -150,6 +150,38 @@
                 expect(result).to.equal('<link rel="shortcut icon" href="./favicon.ico">');
             });
         });
+
+        describe('When using the checkContent function', function() {
+            it('Should check the content and add missing page meta data', function() {
+                var fileData = {
+                    body: "<p>Test page content.</p> <p>Blah blah blah</p>"
+                };
+                fileData = compileOptions().checkContent(fileData);
+
+                expect(fileData).to.deep.equal({
+                    slug: 'test-page-content-blah-blah-blah',
+                    template: 'page.hbs',
+                    title: 'Test page content. Blah blah blah',
+                    body: '<p>Test page content.</p> <p>Blah blah blah</p>'
+                });
+            });
+
+            it('Should check the content and add missing post meta data', function() {
+                var fileData = {
+                    date: '2015-02-23',
+                    body: "<p>Test post content.</p> <p>Blah blah blah</p>"
+                };
+                fileData = compileOptions().checkContent(fileData);
+
+                expect(fileData).to.deep.equal({
+                    slug: 'test-post-content-blah-blah-blah',
+                    template: 'post.hbs',
+                    title: 'Test post content. Blah blah blah',
+                    date: '2015-02-23',
+                    body: '<p>Test post content.</p> <p>Blah blah blah</p>'
+                });
+            });
+        });
     });
 
 })();

@@ -1,49 +1,58 @@
 (function () {
-    "use strict";
+    'use strict';
 
-    var gulp = require("gulp"),
+    var gulp = require('gulp'),
         Promise = require('bluebird'),
-        compileHandlebars = require("gulp-compile-handlebars"),
-        rename = require("gulp-rename"),
-        fs = require("fs"),
-        path = require("path"),
-        glob = require("glob"),
-        moment = require("moment"),
+        compileHandlebars = require('gulp-compile-handlebars'),
+        rename = require('gulp-rename'),
+        fs = require('fs'),
+        path = require('path'),
+        glob = require('glob'),
+        moment = require('moment'),
         _ = require('lodash'),
-        compileOptions = require("../lib/compile-options"),
-        tags = require("../lib/tags"),
-        resolvePaths = require("../lib/paths"),
-        compileDrafts = require('../lib/drafts');
+        compileOptions = require('../lib/compile-options'),
+        tags = require('../lib/tags'),
+        resolvePaths = require('../lib/paths'),
+        compileDrafts = require('../lib/drafts'),
+        promiseList = require('../lib/promises');
 
     module.exports.run = function (rootPath, done, error) {
-        var siteData = JSON.parse(fs.readFileSync(rootPath + "/site.json", "utf8"));
-        var gulpVersion = require("gulp/package").version;
+        var siteData = JSON.parse(fs.readFileSync(rootPath + '/site.json', 'utf8'));
+        var gulpVersion = require('gulp/package').version;
+        var compileOptionsObj = compileOptions(rootPath);
 
-        glob(rootPath + "/build/content/posts/*.json", {cwd: rootPath}, function (err, files) {
+        glob(rootPath + '/build/content/**/*.json', {cwd: rootPath}, function (err, files) {
             if (err) {
                 error(err);
             } else {
                 var tagPosts = {};
 
                 files.forEach(function (file) {
-                    var fileData = JSON.parse(fs.readFileSync(file, "utf8"));
+                    var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
 
-                    if (fileData.status && fileData.status === "draft" && !compileDrafts()) {
+                    if (fileData.status && fileData.status === 'draft' && !compileDrafts()) {
                         return;
                     }
+
+                    if (!fileData.tags || !fileData.date || !fileData.template) {
+                        return;
+                    }
+
+                    // check and fill-in missing file meta data
+                    fileData = compileOptionsObj.checkContent(fileData);
 
                     if (fileData.tags) {
                         var metaData = {
                             title: fileData.title,
-                            description: resolvePaths.resolve(fileData.body, "../.."),
-                            url: "../../" + fileData.slug + "/",
-                            tags: (fileData.tags ? tags.getTagsAsLinks("../..", fileData.tags) : undefined),
+                            description: resolvePaths.resolve(fileData.body, '../..'),
+                            url: '../../' + fileData.slug + '/',
+                            tags: (fileData.tags ? tags.getTagsAsLinks('../..', fileData.tags) : undefined),
                             date: fileData.date,
-                            post_class: "post" + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
+                            post_class: 'post' + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
                             meta: fileData
                         };
 
-                        var tagList = fileData.tags.split(" ");
+                        var tagList = fileData.tags.split(' ');
                         tagList.forEach(function (tag) {
                             if (tagPosts[tag]) {
                                 tagPosts[tag].push(metaData);
@@ -64,15 +73,15 @@
                         });
 
                         var templateData = {
-                            date: moment().format("YYYY-MM-DD"),
-                            resourcePath: "../..",
-                            generator: "Gulp " + gulpVersion,
+                            date: moment().format('YYYY-MM-DD'),
+                            resourcePath: '../..',
+                            generator: 'Gulp ' + gulpVersion,
                             meta_title: siteData.title,
-                            url: "../..",
+                            url: '../..',
                             site: siteData,
                             posts: tagPosts[tag],
-                            body_class: "home-template",
-                            rss: "../.." + siteData.rss,
+                            body_class: 'home-template',
+                            rss: '../..' + siteData.rss,
                             tag: tag
                         };
 
@@ -87,12 +96,12 @@
                                 var pageNumber = i + 1;
                                 var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
                                 promises.push(new Promise(function(resolve, reject) {
-                                    gulp.src(rootPath + "/src/templates/partials/loop.hbs")
-                                        .pipe(compileHandlebars({ posts: nextPosts }, compileOptions(rootPath)))
-                                        .pipe(rename("index.html"))
-                                        .pipe(gulp.dest(rootPath + "/build/pagination/tag/" + tag + '/' + pageNumber))
-                                        .on("error", reject)
-                                        .on("end", resolve);
+                                    gulp.src(rootPath + '/src/templates/partials/loop.hbs')
+                                        .pipe(compileHandlebars({ posts: nextPosts }, compileOptionsObj))
+                                        .pipe(rename('index.html'))
+                                        .pipe(gulp.dest(rootPath + '/build/pagination/tag/' + tag + '/' + pageNumber))
+                                        .on('error', reject)
+                                        .on('end', resolve);
                                 }));
                             }
 
@@ -102,16 +111,16 @@
                         }
 
                         promises.push(new Promise(function (resolve, reject) {
-                            gulp.src(rootPath + "/src/templates/index.hbs")
-                                .pipe(compileHandlebars(templateData, compileOptions(rootPath)))
-                                .pipe(rename("index.html"))
-                                .pipe(gulp.dest(rootPath + "/build/tag/" + tag))
-                                .on("error", reject)
-                                .on("end", resolve);
+                            gulp.src(rootPath + '/src/templates/index.hbs')
+                                .pipe(compileHandlebars(templateData, compileOptionsObj))
+                                .pipe(rename('index.html'))
+                                .pipe(gulp.dest(rootPath + '/build/tag/' + tag))
+                                .on('error', reject)
+                                .on('end', resolve);
                         }));
                     }
 
-                    Promise.all(promises)
+                    Promise.all(promiseList.filter(promises))
                         .then(function () {
                             done();
                         }, function (err) {

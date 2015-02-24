@@ -4,11 +4,33 @@
     var moment = require("moment"),
         _ = require("lodash"),
         downsize = require("downsize"),
-        downzero = require("./downzero");
+        downzero = require("./downzero"),
+        stringUtils = require('mout/string');
 
     module.exports = function(rootPath) {
         return {
             batch: [rootPath + "/src/templates/partials"],
+            checkContent: function(fileData) {
+                var excerpt = stringUtils.stripHtmlTags(fileData.body);
+                excerpt = excerpt.replace(/(\r\n|\n|\r)+/gm, ' ');
+                var title = downsize(excerpt, { words: 10 });
+
+                if (!fileData.slug) {
+                    fileData.slug = stringUtils.slugify(title, '-');
+                }
+
+                if (!fileData.title) {
+                    fileData.title = title;
+                }
+
+                if (!fileData.template && !fileData.date) {
+                    fileData.template = 'page.hbs';
+                } else if (fileData.date && !fileData.template) {
+                    fileData.template = 'post.hbs';
+                }
+
+                return fileData;
+            },
             helpers : {
                 date: function(context, options) {
                     if (!options && context.hasOwnProperty("hash")) {
@@ -39,7 +61,7 @@
                         truncateOptions[key] = parseInt(truncateOptions[key], 10);
                     });
 
-                    excerpt = String(this.description).replace(/<\/?[^>]+>/gi, "");
+                    excerpt = stringUtils.stripHtmlTags(this.description);
                     excerpt = excerpt.replace(/(\r\n|\n|\r)+/gm, " ");
 
                     if (!truncateOptions.words && !truncateOptions.characters) {

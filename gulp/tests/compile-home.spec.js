@@ -6,6 +6,7 @@
         expect = require('chai').expect,
         mockery = require('mockery'),
         sinon = require('sinon'),
+        Promise = require('bluebird'),
         fs = require('fs');
 
     describe('Given the home page', function () {
@@ -60,6 +61,47 @@
             });
         });
 
+        describe('When an error occurs with the promises', function() {
+            var promisesListStub, newCompileHome;
+
+            beforeEach(function(done) {
+                mockery.enable({
+                    warnOnReplace: false,
+                    warnOnUnregistered: false,
+                    useCleanCache: true
+                });
+
+                mockery.deregisterAll();
+
+                promisesListStub = {
+                    filter: function() {
+                        return [Promise.reject('An error occurred')];
+                    }
+                };
+
+                mockery.registerMock('../lib/promises', promisesListStub);
+
+                newCompileHome = require('../lib/compile-home');
+
+                newCompileHome.run(rootPath, function() {
+                    done();
+                }, function(err) {
+                    errorStub(err);
+                    done();
+                });
+
+            });
+
+            it('Should call the error function', function() {
+                expect(errorStub.called).to.be.true;
+            });
+
+            afterEach(function() {
+                mockery.deregisterMock('../lib/promises');
+                mockery.disable();
+            });
+        });
+
         describe('When compiling the home page excluding draft templates', function () {
             before(function (done) {
                 fs.writeFileSync(rootPath + '/build/content/pages/test-page.json', '{"slug":"test-page","title":"Test page","template":"page.hbs","body":"<p>Test page content</p>"}', {encoding: 'utf8'});
@@ -106,6 +148,36 @@
             });
         });
 
+        describe('When compiling the home page content with no front matter', function () {
+            before(function (done) {
+                removeDir(rootPath);
+                fs.mkdirSync(rootPath);
+                fs.writeFileSync(rootPath + '/site.json', '{ "title": "Test site" }', {encoding: 'utf8'});
+
+                [
+                    '/src',
+                    '/src/templates',
+                    '/src/templates/partials',
+                    '/build',
+                    '/build/content'
+                ].forEach(function (dir) {
+                        if (!fs.existsSync(rootPath + dir)) {
+                            fs.mkdirSync(rootPath + dir);
+                        }
+                    });
+
+                fs.writeFileSync(rootPath + '/src/templates/partials/loop.hbs', '{{#each pages}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}{{#each posts}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/src/templates/index.hbs', '<div><ul>{{> loop}}</ul></div>', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/test-page.json', '{"body":"<p>Test page content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/test-post1.json', '{"template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                compileHome.run(rootPath, done, errorStub);
+            });
+
+            it('Should have the correct home page content', function () {
+                expect(fs.readFileSync(rootPath + '/build/index.html', 'utf8')).to.equal('<div><ul><li><a href="./test-page-content/">Test page content</a></li><li><a href="./test-post-content/">Test post content</a></li></ul></div>');
+            });
+        });
+
         describe('When there are no posts or pages for the home page', function() {
             beforeEach(function(done) {
                 removeDir(rootPath);
@@ -125,22 +197,6 @@
             });
         });
 
-        xdescribe('When an error occurs with the promises', function() {
-            beforeEach(function(done) {
-                removeDir(rootPath);
-                fs.mkdirSync(rootPath);
-                fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
-                compileHome.run(rootPath, done, function() {
-                    errorStub();
-                    done();
-                });
-            });
-
-            it('Should call the error function', function() {
-                expect(errorStub.called).to.be.true;
-            });
-        });
-
         describe('When a glob error occurs', function() {
             var globStub, newCompileHome;
 
@@ -155,13 +211,15 @@
                     useCleanCache: true
                 });
 
+                mockery.deregisterAll();
+
                 globStub = function(paths, options, callback) {
                     callback({
                         message: 'I threw an error'
                     }, null);
                 };
 
-                mockery.registerMock('globby', globStub);
+                mockery.registerMock('glob', globStub);
 
                 newCompileHome = require('../lib/compile-home');
 
@@ -182,6 +240,7 @@
             });
 
             afterEach(function() {
+                mockery.deregisterMock('glob');
                 mockery.disable();
             });
         });

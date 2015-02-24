@@ -76,6 +76,49 @@
             });
         });
 
+        describe('When an error occurs with the promises', function() {
+            var promisesListStub, newCompilePages;
+
+            beforeEach(function(done) {
+                fs.writeFileSync(rootPath + '/build/content/pages/test-page.json', '{"slug":"test-page","title":"Test page","template":"page.hbs","body":"<p>Test page content</p>"}', {encoding: 'utf8'});
+
+                mockery.enable({
+                    warnOnReplace: false,
+                    warnOnUnregistered: false,
+                    useCleanCache: true
+                });
+
+                mockery.deregisterAll();
+
+                promisesListStub = {
+                    filter: function() {
+                        return [Promise.reject('An error occurred')];
+                    }
+                };
+
+                mockery.registerMock('../lib/promises', promisesListStub);
+
+                newCompilePages = require('../lib/compile-pages');
+
+                newCompilePages.run(rootPath, function() {
+                    done();
+                }, function(err) {
+                    errorStub(err);
+                    done();
+                });
+
+            });
+
+            it('Should call the error function', function() {
+                expect(errorStub.called).to.be.true;
+            });
+
+            afterEach(function() {
+                mockery.deregisterMock('../lib/promises');
+                mockery.disable();
+            });
+        });
+
         describe('When compiling posts and excluding draft templates', function () {
             before(function (done) {
                 fs.writeFileSync(rootPath + '/build/content/posts/test-draft-post.json', '{"slug":"test-draft-post","title":"Test draft post","template":"post.hbs","status":"draft","body":"<p>Test draft post content</p>"}', {encoding: 'utf8'});
@@ -118,22 +161,6 @@
             });
         });
 
-        xdescribe('When an error occurs with the promises', function() {
-            beforeEach(function(done) {
-                removeDir(rootPath);
-                fs.mkdirSync(rootPath);
-                fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
-                compilePages.run(rootPath, done, function() {
-                    errorStub();
-                    done();
-                });
-            });
-
-            it('Should call the error function', function() {
-                expect(errorStub.called).to.be.true;
-            });
-        });
-
         describe('When a glob error occurs', function() {
             var globStub, newCompilePages;
 
@@ -148,13 +175,15 @@
                     useCleanCache: true
                 });
 
+                mockery.deregisterAll();
+
                 globStub = function(paths, options, callback) {
                     callback({
                         message: 'I threw an error'
                     }, null);
                 };
 
-                mockery.registerMock('globby', globStub);
+                mockery.registerMock('glob', globStub);
 
                 newCompilePages = require('../lib/compile-pages');
 
@@ -175,6 +204,7 @@
             });
 
             afterEach(function() {
+                mockery.deregisterMock('glob');
                 mockery.disable();
             });
         });
