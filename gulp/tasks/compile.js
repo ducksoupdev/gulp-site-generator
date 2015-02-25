@@ -7,6 +7,7 @@
         compileHome = require('../lib/compile-home'),
         compilePages = require('../lib/compile-pages'),
         compileTags = require('../lib/compile-tags'),
+        compileDates = require('../lib/compile-dates'),
         removeDir = require('../lib/remove-dir');
 
     gulp.task('compile', ['content'], function(done) {
@@ -20,6 +21,11 @@
         // tags
         compilePromises.push(new Promise(function(resolve, reject) {
             compileTags.run('.', resolve, reject);
+        }));
+
+        // dates
+        compilePromises.push(new Promise(function(resolve, reject) {
+            compileDates.run('.', resolve, reject);
         }));
 
         // rss feed compilation

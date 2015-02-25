@@ -63,7 +63,7 @@
 
         describe('When compiling a post', function () {
             before(function (done) {
-                fs.writeFileSync(rootPath + '/build/content/posts/test-post.json', '{"slug":"test-post","title":"Test post","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-post.json', '{"slug":"test-post","title":"Test post","date":"2014-06-11","template":"post.hbs","body":"<p>Test post content</p>"}', {encoding: 'utf8'});
                 compilePages.run(rootPath, done, errorStub);
             });
 
@@ -121,7 +121,7 @@
 
         describe('When compiling posts and excluding draft templates', function () {
             before(function (done) {
-                fs.writeFileSync(rootPath + '/build/content/posts/test-draft-post.json', '{"slug":"test-draft-post","title":"Test draft post","template":"post.hbs","status":"draft","body":"<p>Test draft post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-draft-post.json', '{"slug":"test-draft-post","title":"Test draft post","date":"2014-06-11","template":"post.hbs","status":"draft","body":"<p>Test draft post content</p>"}', {encoding: 'utf8'});
                 compilePages.run(rootPath, done, errorStub);
             });
 
@@ -133,12 +133,12 @@
         describe('When compiling posts and including tags', function () {
             before(function (done) {
                 fs.writeFileSync(rootPath + '/src/templates/post.hbs', '<div class="{{body_class}}"><div class="post"><h1>{{post.title}}</h1>{{{post.body}}}</div></div>', {encoding: 'utf8'});
-                fs.writeFileSync(rootPath + '/build/content/posts/test-tagged-post.json', '{"slug":"test-tagged-post","title":"Test tagged post","template":"post.hbs","tags":"tag1 tag2","body":"<p>Test tagged post content</p>"}', {encoding: 'utf8'});
+                fs.writeFileSync(rootPath + '/build/content/posts/test-tagged-post.json', '{"slug":"test-tagged-post","title":"Test tagged post","date":"2014-06-11","template":"post.hbs","tags":"tag1 tag2","body":"<p>Test tagged post content</p>"}', {encoding: 'utf8'});
                 compilePages.run(rootPath, done, errorStub);
             });
 
             it('Should have the correct post content', function () {
-                expect(fs.readFileSync(rootPath + '/build/test-tagged-post/index.html', 'utf8')).to.equal('<div class="post-template page-template page tag-tag1 tag-tag2"><div class="post"><h1>Test tagged post</h1><p>Test tagged post content</p></div></div>');
+                expect(fs.readFileSync(rootPath + '/build/test-tagged-post/index.html', 'utf8')).to.equal('<div class="post-template tag-tag1 tag-tag2"><div class="post"><h1>Test tagged post</h1><p>Test tagged post content</p></div></div>');
             });
         });
 

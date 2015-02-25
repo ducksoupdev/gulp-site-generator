@@ -9,8 +9,10 @@
         path = require('path'),
         glob = require('glob'),
         moment = require('moment'),
+        _ = require('lodash'),
         compileOptions = require('../lib/compile-options'),
         tags = require('../lib/tags'),
+        dates = require('../lib/dates'),
         resolvePaths = require('../lib/paths'),
         compileDrafts = require('../lib/drafts'),
         promiseList = require('../lib/promises');
@@ -24,7 +26,7 @@
             if (err) {
                 error(err);
             } else {
-                var promises = [];
+                var templatesToCreate = [], posts = [];
 
                 files.forEach(function(file) {
                     var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -42,16 +44,21 @@
                         title: fileData.title,
                         body: resolvePaths.resolve(fileData.body, '..'),
                         url: '../' + fileData.slug + '/',
+                        tagStr: fileData.tags,
                         tags: (fileData.tags ? tags.getTagsAsLinks('..', fileData.tags) : undefined),
                         date: fileData.date,
-                        post_class: 'post ' + (/pages\//.test(file) ? 'page ' : '') + (fileData.tags ? tagClasses : fileData.slug),
+                        post_class: 'post ' + (fileData.template === 'page.hbs' ? 'page ' : '') + (fileData.tags ? tagClasses : fileData.slug),
                         author: (fileData.author ? siteData.authors[fileData.author] : ''),
                         meta: fileData
                     };
 
+                    if (fileData.date && fileData.template === 'post.hbs') {
+                        posts.push(metaData);
+                    }
+
                     // post class
                     var bodyClass = 'post-template';
-                    if (/pages\//.test(file)) {
+                    if (fileData.template === 'page.hbs') {
                         bodyClass += ' page-template page';
                     }
 
@@ -74,17 +81,32 @@
 
                     var outDir = rootPath + '/build/' + path.basename(file).replace(/\.[^/.]+$/, '');
 
-                    promises.push(new Promise(function(resolve, reject) {
-                        gulp.src(rootPath + '/src/templates/' + fileData.template)
-                            .pipe(compileHandlebars(templateData, compileOptionsObj))
-                            .pipe(rename('index.html'))
-                            .pipe(gulp.dest(outDir))
-                            .on('error', reject)
-                            .on('end', resolve);
-                    }));
+                    templatesToCreate.push({
+                        outDir: outDir,
+                        templateSrc: rootPath + '/src/templates/' + fileData.template,
+                        templateData: templateData
+                    });
+
                 });
 
-                if (promises.length) {
+                if (templatesToCreate.length) {
+                    var promises = [];
+                    templatesToCreate.forEach(function(templateToCreate) {
+                        _.extend(templateToCreate.templateData, {
+                            allDates: dates.getAllDatesAsLinks('..', posts),
+                            allTags: tags.getAllTagsAsLinks('..', posts)
+                        });
+
+                        promises.push(new Promise(function(resolve, reject) {
+                            gulp.src(templateToCreate.templateSrc)
+                                .pipe(compileHandlebars(templateToCreate.templateData, compileOptionsObj))
+                                .pipe(rename('index.html'))
+                                .pipe(gulp.dest(templateToCreate.outDir))
+                                .on('error', reject)
+                                .on('end', resolve);
+                        }));
+                    });
+
                     Promise.all(promiseList.filter(promises))
                         .then(function () {
                             done();

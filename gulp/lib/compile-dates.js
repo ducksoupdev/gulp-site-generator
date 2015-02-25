@@ -27,7 +27,7 @@
             if (err) {
                 error(err);
             } else {
-                var tagPosts = {}, posts = [];
+                var datePosts = {}, posts = [];
 
                 files.forEach(function (file) {
                     var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -59,23 +59,21 @@
                     }
 
                     if (fileData.tags) {
-                        var tagList = fileData.tags.split(' ');
-                        tagList.forEach(function (tag) {
-                            if (tagPosts[tag]) {
-                                tagPosts[tag].push(metaData);
-                            } else {
-                                tagPosts[tag] = [metaData];
-                            }
-                        });
+                        var dateMonth = fileData.date.substr(0, 7); //2014-12
+                        if (datePosts[dateMonth]) {
+                            datePosts[dateMonth].push(metaData);
+                        } else {
+                            datePosts[dateMonth] = [metaData];
+                        }
                     }
                 });
 
-                if (_.size(tagPosts)) {
+                if (_.size(datePosts)) {
                     var promises = [];
 
-                    for (var tag in tagPosts) {
-                        // sort the tag posts
-                        tagPosts[tag].sort(function (a, b) {
+                    for (var dateMonth in datePosts) {
+                        // sort the dateMonth posts
+                        datePosts[dateMonth].sort(function (a, b) {
                             return new Date(a.date).getTime() < new Date(b.date).getTime();
                         });
 
@@ -86,29 +84,22 @@
                             meta_title: siteData.title,
                             url: '../..',
                             site: siteData,
-                            posts: tagPosts[tag],
+                            posts: datePosts[dateMonth],
                             body_class: 'home-template',
                             rss: '../..' + siteData.rss,
-                            tag: tag,
-                            allDates: dates.getAllDatesAsLinks('../..', posts),
-                            allTags: tags.getAllTagsAsLinks('../..', posts)
+                            dateStr: moment(dateMonth, 'YYYY-MM').format('MMMM YYYY')
                         };
 
-                        if (siteData.maxItems && tagPosts[tag].length > siteData.maxItems) {
+                        if (siteData.maxItems && datePosts[dateMonth].length > siteData.maxItems) {
                             // how many pages do we need to create?
-                            var totalPages = Math.ceil(tagPosts[tag].length / siteData.maxItems);
+                            var totalPages = Math.ceil(datePosts[dateMonth].length / siteData.maxItems);
 
                             // shorten posts
-                            var paginatedPosts = tagPosts[tag].splice(siteData.maxItems);
+                            var paginatedPosts = datePosts[dateMonth].splice(siteData.maxItems);
 
                             for (var i = 1; i < totalPages; i++) {
                                 var pageNumber = i + 1;
                                 var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
-
-                                // update the resource paths
-                                nextPosts.forEach(function(post) {
-                                    post.description = resolvePaths.resolve(post.meta.body, '../../..');
-                                });
 
                                 // create custom template data for this paginated page
                                 var pageTemplateData = langUtils.deepClone(templateData);
@@ -125,14 +116,14 @@
                                     gulp.src(rootPath + '/src/templates/index.hbs')
                                         .pipe(compileHandlebars(pageTemplateData, compileOptionsObj))
                                         .pipe(rename('index.html'))
-                                        .pipe(gulp.dest(rootPath + '/build/tag/' + tag + '/page/' + pageNumber))
+                                        .pipe(gulp.dest(rootPath + '/build/date/' + dateMonth + '/page/' + pageNumber))
                                         .on('error', reject)
                                         .on('end', resolve);
                                 }));
                             }
 
                             // update template
-                            templateData.nextUrl = '../../tag/' + tag + '/page/2';
+                            templateData.nextUrl = '../../date/' + dateMonth + '/page';
                             templateData.totalPages = totalPages;
                         }
 
@@ -140,7 +131,7 @@
                             gulp.src(rootPath + '/src/templates/index.hbs')
                                 .pipe(compileHandlebars(templateData, compileOptionsObj))
                                 .pipe(rename('index.html'))
-                                .pipe(gulp.dest(rootPath + '/build/tag/' + tag))
+                                .pipe(gulp.dest(rootPath + '/build/date/' + dateMonth))
                                 .on('error', reject)
                                 .on('end', resolve);
                         }));

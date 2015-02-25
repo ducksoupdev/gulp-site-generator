@@ -6,7 +6,15 @@
 
     <header>
         <h1>{{site.title}}</h1>
-        <p>{{site.description}}</p>
+        {{#if tag}}
+            <p>Posts tagged: {{tag}}</p>
+        {{else}}
+            {{#if dateStr}}
+                <p>Posts dated: {{dateStr}}</p>
+            {{else}}
+                <p>{{site.description}}</p>
+            {{/if}}
+        {{/if}}
     </header>
 
     <div class="row">

@@ -28,8 +28,7 @@
                 '/src/templates',
                 '/src/templates/partials',
                 '/build',
-                '/build/pagination',
-                '/build/pagination/index',
+                '/build/page',
                 '/build/content',
                 '/build/content/pages',
                 '/build/content/posts'

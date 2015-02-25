@@ -9,8 +9,11 @@
         path = require('path'),
         glob = require('glob'),
         moment = require('moment'),
+        langUtils = require('mout/lang'),
+        _ = require('lodash'),
         compileOptions = require('../lib/compile-options'),
         tags = require('../lib/tags'),
+        dates = require('../lib/dates'),
         resolvePaths = require('../lib/paths'),
         compileDrafts = require('../lib/drafts'),
         promiseList = require('../lib/promises');
@@ -40,16 +43,17 @@
                         title: fileData.title,
                         description: resolvePaths.resolve(fileData.body, '.'),
                         url: './' + fileData.slug + '/',
+                        tagStr: fileData.tags,
                         tags: (fileData.tags ? tags.getTagsAsLinks('.', fileData.tags) : undefined),
                         date: fileData.date,
-                        post_class: 'post ' + (/\/pages\//.test(file) ? 'page ' : '') + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
+                        post_class: 'post ' + (fileData.template === 'page.hbs' ? 'page ' : '') + (fileData.tags ? tags.getTagClasses(fileData.tags) : fileData.slug),
                         meta: fileData
                     };
 
-                    if (/\/pages\//.test(file)) {
-                        pages.push(metaData);
-                    } else {
+                    if (fileData.date && fileData.template === 'post.hbs') {
                         posts.push(metaData);
+                    } else {
+                        pages.push(metaData);
                     }
                 });
 
@@ -68,7 +72,9 @@
                         posts: posts,
                         pages: pages,
                         body_class: 'home-template',
-                        rss: '.' + siteData.rss
+                        rss: '.' + siteData.rss,
+                        allDates: dates.getAllDatesAsLinks('.', posts),
+                        allTags: tags.getAllTagsAsLinks('.', posts)
                     };
 
                     var promises = [];
@@ -83,9 +89,27 @@
                         for (var i = 1; i < totalPages; i++) {
                             var pageNumber = i + 1;
                             var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
+
+                            // update the resource paths
+                            nextPosts.forEach(function(post) {
+                                post.description = resolvePaths.resolve(post.meta.body, '../..');
+                            });
+
+                            // create custom template data for this paginated page
+                            var pageTemplateData = langUtils.deepClone(templateData);
+                            _.extend(pageTemplateData, {
+                                posts: nextPosts,
+                                resourcePath: '../..',
+                                url: '../..',
+                                rss: '../..' + siteData.rss,
+                                allDates: dates.getAllDatesAsLinks('../..', posts),
+                                allTags: tags.getAllTagsAsLinks('../..', posts)
+                            });
+                            delete pageTemplateData.pages;
+
                             promises.push(new Promise(function(resolve, reject) {
                                 gulp.src(rootPath + '/src/templates/index.hbs')
-                                    .pipe(compileHandlebars({ posts: nextPosts }, compileOptionsObj))
+                                    .pipe(compileHandlebars(pageTemplateData, compileOptionsObj))
                                     .pipe(rename('index.html'))
                                     .pipe(gulp.dest(rootPath + '/build/page/' + pageNumber))
                                     .on('error', reject)
@@ -96,7 +120,7 @@
                         }
 
                         // update template
-                        templateData.nextUrl = './pagination/index';
+                        templateData.nextUrl = './page/2';
                         templateData.totalPages = totalPages;
                     }
 
