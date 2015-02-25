@@ -84,10 +84,10 @@
                             var pageNumber = i + 1;
                             var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
                             promises.push(new Promise(function(resolve, reject) {
-                                gulp.src(rootPath + '/src/templates/partials/loop.hbs')
+                                gulp.src(rootPath + '/src/templates/index.hbs')
                                     .pipe(compileHandlebars({ posts: nextPosts }, compileOptionsObj))
                                     .pipe(rename('index.html'))
-                                    .pipe(gulp.dest(rootPath + '/build/pagination/index/' + pageNumber))
+                                    .pipe(gulp.dest(rootPath + '/build/page/' + pageNumber))
                                     .on('error', reject)
                                     .on('end', function() {
                                         resolve();

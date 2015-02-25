@@ -147,19 +147,19 @@
             });
 
             it('Should create the second paginated mocha tag page', function () {
-                expect(fs.existsSync(rootPath + '/build/pagination/tag/mocha/2/index.html')).to.be.true;
+                expect(fs.existsSync(rootPath + '/build/tag/mocha/page/2/index.html')).to.be.true;
             });
 
             it('Should create the third paginated mocha tag page', function () {
-                expect(fs.existsSync(rootPath + '/build/pagination/tag/mocha/3/index.html')).to.be.true;
+                expect(fs.existsSync(rootPath + '/build/tag/mocha/page/3/index.html')).to.be.true;
             });
 
             it('Should have the correct content for the second paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/pagination/tag/mocha/2/index.html', 'utf8')).to.equal('<li><a href="../../test-post3/">Test post 3</a></li><li><a href="../../test-post4/">Test post 4</a></li>');
+                expect(fs.readFileSync(rootPath + '/build/tag/mocha/page/2/index.html', 'utf8')).to.equal('<div><ul><li><a href="../../test-post3/">Test post 3</a></li><li><a href="../../test-post4/">Test post 4</a></li></ul></div>');
             });
 
             it('Should have the correct content for the third paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/pagination/tag/mocha/3/index.html', 'utf8')).to.equal('<li><a href="../../test-post5/">Test post 5</a></li><li><a href="../../test-post6/">Test post 6</a></li>');
+                expect(fs.readFileSync(rootPath + '/build/tag/mocha/page/3/index.html', 'utf8')).to.equal('<div><ul><li><a href="../../test-post5/">Test post 5</a></li><li><a href="../../test-post6/">Test post 6</a></li></ul></div>');
             });
         });
 

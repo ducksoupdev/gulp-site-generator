@@ -96,17 +96,17 @@
                                 var pageNumber = i + 1;
                                 var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
                                 promises.push(new Promise(function(resolve, reject) {
-                                    gulp.src(rootPath + '/src/templates/partials/loop.hbs')
+                                    gulp.src(rootPath + '/src/templates/index.hbs')
                                         .pipe(compileHandlebars({ posts: nextPosts }, compileOptionsObj))
                                         .pipe(rename('index.html'))
-                                        .pipe(gulp.dest(rootPath + '/build/pagination/tag/' + tag + '/' + pageNumber))
+                                        .pipe(gulp.dest(rootPath + '/build/tag/' + tag + '/page/' + pageNumber))
                                         .on('error', reject)
                                         .on('end', resolve);
                                 }));
                             }
 
                             // update template
-                            templateData.nextUrl = '../../pagination/tag/' + tag;
+                            templateData.nextUrl = '../../tag/' + tag + '/page';
                             templateData.totalPages = totalPages;
                         }
 
