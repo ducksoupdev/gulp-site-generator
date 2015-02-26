@@ -15,7 +15,7 @@
             posts.forEach(function (post) {
                 var dateMonth = post.date.substr(0, 7); //2014-12
                 if (!allDates[dateMonth]) {
-                    allDates[dateMonth] = self.getDateAsLink(path, dateMonth, moment(dateMonth, 'YYYY-MM').format('MMMM YYYY'));
+                    allDates[dateMonth] = path + '/date/' + dateMonth;
                 }
             });
             var keys = Object.keys(allDates);
@@ -24,6 +24,7 @@
                 keys.forEach(function (key) {
                     allDatesArray.push({
                         dateMonth: key,
+                        dateStr: moment(key, 'YYYY-MM').format('MMMM YYYY'),
                         dateLink: allDates[key]
                     });
                 });

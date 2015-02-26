@@ -24,8 +24,8 @@
 
         it('Should get all dates as links', function() {
             expect(dates.getAllDatesAsLinks('.', this.posts)).to.deep.equal([
-                {dateMonth: '2014-06', dateLink: '<a href="./date/2014-06">June 2014</a>'},
-                {dateMonth: '2014-12', dateLink: '<a href="./date/2014-12">December 2014</a>'}
+                {dateMonth: '2014-06', dateStr: 'June 2014', dateLink: './date/2014-06'},
+                {dateMonth: '2014-12', dateStr: 'December 2014', dateLink: './date/2014-12'}
             ]);
         });
     });

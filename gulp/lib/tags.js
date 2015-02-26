@@ -37,7 +37,7 @@
                     var tagList = post.tagStr.split(' ');
                     tagList.forEach(function (tag) {
                         if (!allTags[tag]) {
-                            allTags[tag] = self.getTagAsLink(path, tag);
+                            allTags[tag] = path + '/tag/' + tag;
                         }
                     });
                 }

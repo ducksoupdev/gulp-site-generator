@@ -41,9 +41,9 @@
 
         it('Should get all tags as links', function() {
             expect(tags.getAllTagsAsLinks('.', this.posts)).to.deep.equal([
-                {tag: 'content', tagLink: '<a href="./tag/content">content</a>'},
-                {tag: 'gulp', tagLink: '<a href="./tag/gulp">gulp</a>'},
-                {tag: 'testing', tagLink: '<a href="./tag/testing">testing</a>'}
+                {tag: 'content', tagLink: './tag/content'},
+                {tag: 'gulp', tagLink: './tag/gulp'},
+                {tag: 'testing', tagLink: './tag/testing'}
             ]);
         });
     });
