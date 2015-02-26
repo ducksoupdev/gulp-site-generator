@@ -36,7 +36,7 @@
                         return;
                     }
 
-                    if (!fileData.tags || !fileData.date || !fileData.template) {
+                    if (!fileData.date || !fileData.template) {
                         return;
                     }
 
@@ -58,7 +58,7 @@
                         posts.push(metaData);
                     }
 
-                    if (fileData.tags) {
+                    if (fileData.date) {
                         var dateMonth = fileData.date.substr(0, 7); //2014-12
                         if (datePosts[dateMonth]) {
                             datePosts[dateMonth].push(metaData);
