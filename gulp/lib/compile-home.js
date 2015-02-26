@@ -125,7 +125,7 @@
                         templateData.totalPages = totalPages;
                     }
 
-                    promises.push(new Promise(function(resolve, reject) {
+                    promises.unshift(new Promise(function(resolve, reject) {
                         gulp.src(rootPath + '/src/templates/index.hbs')
                             .pipe(compileHandlebars(templateData, compileOptionsObj))
                             .pipe(rename('index.html'))
