@@ -5,6 +5,7 @@
         removeDir = require('../lib/remove-dir'),
         expect = require('chai').expect,
         mockery = require('mockery'),
+        Promise = require('promise'),
         sinon = require('sinon'),
         fs = require('fs');
 
