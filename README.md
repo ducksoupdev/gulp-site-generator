@@ -110,7 +110,6 @@ Pages and posts must created in the `src/content/pages` and `src/content/posts` 
 Pages and posts are Markdown files with a YAML front-matter block. The front matter must be the first thing in the file and must take the form of valid YAML set between triple-dashed lines. Here is a basic example:
 
     ---
-    slug: index
     title: Home
     template: index.hbs
     ---
@@ -119,9 +118,9 @@ Pages and posts are Markdown files with a YAML front-matter block. The front mat
 
 Between these triple-dashed lines, you can set predefined variables (see below). These variables will then be available to you in any Handlebars templates or includes that the page or post in question relies on.
 
-* slug (required) - the URL slug which is used as the directory name when the page or post is built
 * title (required) - the title of the page or post
 * template (required) - the Handlebars template to use to compile the page or post
+* slug (optional) - the URL slug which is used as the directory name when the page or post is built
 * date (optional) - used for posts and in the format YYYY-MM-DD
 * author (optional) - used for posts and the author key in the `site.json` file
 * status (optional) - set to 'draft' to ignore the page or post when running the generator
