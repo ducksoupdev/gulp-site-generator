@@ -124,7 +124,7 @@
                 newCompileRss = require('../lib/compile-rss');
 
                 newCompileRss.run(rootPath, function() {
-                    done();
+                    //done();
                 }, function(err) {
                     errorStub(err);
                     done();
