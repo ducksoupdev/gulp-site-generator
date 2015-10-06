@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.17 (2015-10-06)
+
+**Fixes**
+
+* Fix develop task to watch files in `src` and run default task
+
 ## v0.1.16 (2015-09-23)
 
 **Fixes**
