@@ -1,4 +1,4 @@
-(function () {
+(function() {
     "use strict";
 
     var fs = require("fs"),
@@ -6,6 +6,7 @@
         glob = require("glob"),
         moment = require("moment"),
         RSS = require("rss"),
+        dates = require('../lib/dates'),
         resolvePaths = require("../lib/paths"),
         compileDrafts = require('../lib/drafts');
 
@@ -13,7 +14,9 @@
         var siteData = JSON.parse(fs.readFileSync(rootPath + "/site.json", "utf8"));
         var gulpVersion = require("gulp/package").version;
 
-        glob(rootPath + "/build/content/posts/*.json", { cwd: rootPath }, function(err, files) {
+        glob(rootPath + "/build/content/posts/*.json", {
+            cwd: rootPath
+        }, function(err, files) {
             if (err) {
                 error(err);
             } else {
@@ -48,11 +51,9 @@
                         ttl: 60
                     });
 
-                    posts.sort(function (a, b) {
-                        return new Date(a.date).getTime() < new Date(b.date).getTime();
-                    });
+                    posts.sort(dates.sortFunc);
 
-                    posts.forEach(function (item) {
+                    posts.forEach(function(item) {
                         feed.item({
                             title: item.title,
                             description: item.description,
@@ -65,7 +66,9 @@
 
                     var xml = feed.xml();
 
-                    fs.writeFile(rootPath + "/build/rss.xml", xml, {encoding: "utf8"}, function (err) {
+                    fs.writeFile(rootPath + "/build/rss.xml", xml, {
+                        encoding: "utf8"
+                    }, function(err) {
                         if (err) {
                             error(err);
                         }

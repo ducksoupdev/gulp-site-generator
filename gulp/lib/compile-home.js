@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     var gulp = require('gulp'),
@@ -23,11 +23,14 @@
         var gulpVersion = require('gulp/package').version;
         var compileOptionsObj = compileOptions(rootPath);
 
-        glob(rootPath + '/build/content/**/*.json', { cwd: rootPath }, function(err, files) {
+        glob(rootPath + '/build/content/**/*.json', {
+            cwd: rootPath
+        }, function(err, files) {
             if (err) {
                 error(err);
             } else {
-                var posts = [], pages = [];
+                var posts = [],
+                    pages = [];
 
                 files.forEach(function(file) {
                     var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -58,9 +61,7 @@
                 });
 
                 if (posts.length || pages.length) {
-                    posts.sort(function(a, b) {
-                        return new Date(a.date).getTime() < new Date(b.date).getTime();
-                    });
+                    posts.sort(dates.sortFunc);
 
                     var templateData = {
                         date: moment().format('YYYY-MM-DD'),
@@ -135,7 +136,7 @@
                     }));
 
                     Promise.all(promiseList.filter(promises))
-                        .then(function () {
+                        .then(function() {
                             done();
                         }, function(err) {
                             error(err);

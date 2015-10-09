@@ -1,4 +1,4 @@
-(function () {
+(function() {
     'use strict';
 
     var gulp = require('gulp'),
@@ -18,18 +18,21 @@
         compileDrafts = require('../lib/drafts'),
         promiseList = require('../lib/promises');
 
-    module.exports.run = function (rootPath, done, error) {
+    module.exports.run = function(rootPath, done, error) {
         var siteData = JSON.parse(fs.readFileSync(rootPath + '/site.json', 'utf8'));
         var gulpVersion = require('gulp/package').version;
         var compileOptionsObj = compileOptions(rootPath);
 
-        glob(rootPath + '/build/content/**/*.json', {cwd: rootPath}, function (err, files) {
+        glob(rootPath + '/build/content/**/*.json', {
+            cwd: rootPath
+        }, function(err, files) {
             if (err) {
                 error(err);
             } else {
-                var tagPosts = {}, posts = [];
+                var tagPosts = {},
+                    posts = [];
 
-                files.forEach(function (file) {
+                files.forEach(function(file) {
                     var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
 
                     if (fileData.status && fileData.status === 'draft' && !compileDrafts()) {
@@ -60,7 +63,7 @@
 
                     if (fileData.tags) {
                         var tagList = fileData.tags.split(' ');
-                        tagList.forEach(function (tag) {
+                        tagList.forEach(function(tag) {
                             if (tagPosts[tag]) {
                                 tagPosts[tag].push(metaData);
                             } else {
@@ -75,9 +78,7 @@
 
                     for (var tag in tagPosts) {
                         // sort the tag posts
-                        tagPosts[tag].sort(function (a, b) {
-                            return new Date(a.date).getTime() < new Date(b.date).getTime();
-                        });
+                        tagPosts[tag].sort(dates.sortFunc);
 
                         var templateData = {
                             date: moment().format('YYYY-MM-DD'),
@@ -137,7 +138,7 @@
                             templateData.totalPages = totalPages;
                         }
 
-                        promises.push(new Promise(function (resolve, reject) {
+                        promises.push(new Promise(function(resolve, reject) {
                             gulp.src(rootPath + '/src/templates/index.hbs')
                                 .pipe(compileHandlebars(templateData, compileOptionsObj))
                                 .pipe(rename('index.html'))
@@ -148,9 +149,9 @@
                     }
 
                     Promise.all(promiseList.filter(promises))
-                        .then(function () {
+                        .then(function() {
                             done();
-                        }, function (err) {
+                        }, function(err) {
                             error(err);
                         });
                 } else {
