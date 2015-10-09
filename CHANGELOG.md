@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.18 (2015-10-09)
+
+**Features**
+
+* Update readme and add help task
+
 ## v0.1.17 (2015-10-06)
 
 **Fixes**

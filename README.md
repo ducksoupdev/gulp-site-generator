@@ -7,7 +7,7 @@ This is a simple static site generator which is perfect for a personal, blog or 
 
 It is similar to other static site generators in that it takes your Markdown content, renders it, optimises it and creates a production-ready site that can be served by Nginx, Apache or another web server.
 
-##Features
+## Features
 
 * Convert Markdown files to static HTML
 * [Handlebars](http://handlebarsjs.com) templates and partials
@@ -24,31 +24,32 @@ It is similar to other static site generators in that it takes your Markdown con
 * Convert draft templates
 * Creates a `build/` directory with built content and assets
 
-##Installation
+## Installation
 
 This project is ideal when used as a Git sub-module or installed along-side your site so you can update it when new releases are made.
 
-###Getting the generator
+### Getting the generator
 
-####Git sub-module
-
-    $ mkdir my-static-site
-    $ cd my-static-site
-    $ git submodule add git@github.com:ducksoupdev/gulp-site-generator.git tools
-
-####Straightforward checkout
+#### Git sub-module
 
     $ mkdir my-static-site
     $ cd my-static-site
-    $ git clone git@github.com:ducksoupdev/gulp-site-generator.git tools
+    $ git init
+    $ git submodule add https://github.com/ducksoupdev/gulp-site-generator.git tools
 
-###Installing the dependencies
+#### Straightforward checkout
 
-The generator requires Gulp to be installed as a global module. If you don't have it installed you can install it using:
+    $ mkdir my-static-site
+    $ cd my-static-site
+    $ git clone https://github.com/ducksoupdev/gulp-site-generator.git tools
+
+### Installing the dependencies
+
+The generator requires Gulp to be installed globally. If you don't have it you can install it using:
 
     $ npm install -g gulp
 
-The generator has some dependencies that need to be installed using the install script:
+The generator has some dependencies that need to be installed using the following script:
 
     $ node tools/install
 
@@ -72,7 +73,18 @@ Finally, you can run the generator to create the sample site:
 
 The generator will create a `build/` folder with the compiled and optimised site ready to be deployed to your web server.
 
-##Tasks
+So putting it all together, the installation steps are:
+
+    $ mkdir my-static-site
+    $ cd my-static-site
+    $ git init
+    $ git submodule add https://github.com/ducksoupdev/gulp-site-generator.git tools
+    $ npm install -g gulp
+    $ node tools/install
+    $ npm install
+    $ gulp
+
+## Tasks
 
 When you have created templates, content and assets, the default task will run the generator:
 
@@ -80,12 +92,13 @@ When you have created templates, content and assets, the default task will run t
 
 The following tasks can also be run individually:
 
-* clobber - removes the `build/` directory
-* test - runs the task test suite and creates a coverage report
-* sass - converts sass files to css
-* develop - runs a livereload task for creating content that can be viewed immediately
+* **develop** - a live-reload task for creating and viewing your site where changes are reloaded automatically - view at http://localhost:8080
+* **sass** - converts sass files to css
+* **clobber** - removes the `build/` directory
+* **server** - view your built site locally at http://localhost:8080
+* **help** - lists available tasks
 
-##Configuration
+## Configuration
 
 The metadata file `site.json` contains all configuration required by your site. The following properties are used by the generator.
 You are free to add properties to this file for use in your Handlebars templates.
@@ -99,11 +112,11 @@ You are free to add properties to this file for use in your Handlebars templates
 * concatJs (array) (optional) - a list of javascript files to combine and minify
 * styleSheet (string) (optional) - the name of your main CSS file created by the sass task
 
-##Content
+## Content
 
 Content must be added to the `src/content` directory.
 
-###Pages and posts
+### Pages and posts
 
 Pages and posts must created in the `src/content/pages` and `src/content/posts` directories.
 
@@ -125,7 +138,7 @@ Between these triple-dashed lines, you can set predefined variables (see below).
 * author (optional) - used for posts and the author key in the `site.json` file
 * status (optional) - set to 'draft' to ignore the page or post when running the generator
 
-###Assets
+### Assets
 
 Images, javascripts, fonts etc can all be added to the `src/` directory. You are free to create directories for these and name them accordingly.
 
@@ -134,7 +147,7 @@ Content is created in the `src/content/pages` or `src/content/posts`.
 The generator is opinionated in that it expects certain files in particular directories.
 To help with this, [an example site](https://github.com/ducksoupdev/gulp-site-generator-example) is available that shows you how to structure your site with the generator.
 
-###Templates
+### Templates
 
 Handlebars is used for rendering templates. Partials located in `src/templates/partials` are automatically available to your Handlebar templates.
 
@@ -156,7 +169,7 @@ Helpers are available to your Handlebar templates and partials, these are:
 
     `{{resolve "/favicon.ico"}}`
 
-##Further information
+## Further information
 
 The example site is a good place to start and shows a basic structure of a site with templates and content.
 
