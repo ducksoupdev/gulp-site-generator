@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.19 (2015-10-09)
+
+**Fixes**
+
+* Fix sidebar dates and tags
+
 ## v0.1.18 (2015-10-09)
 
 **Features**
