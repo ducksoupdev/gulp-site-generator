@@ -1,3 +1,4 @@
+/* jshint -W030 */
 (function () {
     'use strict';
 
@@ -41,8 +42,9 @@
 
             // set-up files:
             fs.writeFileSync(rootPath + '/site.json', '{"title":"Test site"}', {encoding: 'utf8'});
-            fs.writeFileSync(rootPath + '/src/templates/partials/loop.hbs', '{{#each posts}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}', {encoding: 'utf8'});
-            fs.writeFileSync(rootPath + '/src/templates/index.hbs', '<div>Posts dated: {{dateStr}}<ul>{{> loop}}</ul></div>', {encoding: 'utf8'});
+            fs.writeFileSync(rootPath + '/src/templates/partials/loop.hbs', '<ul>{{#each posts}}<li><a href="{{url}}">{{title}}</a></li>{{/each}}</ul>', {encoding: 'utf8'});
+            fs.writeFileSync(rootPath + '/src/templates/partials/pagination.hbs', '<ul><li><a href="{{#if nextUrl}}{{nextUrl}}{{else}}#{{/if}}">Older</a></li><li><a href="{{#if prevUrl}}{{prevUrl}}{{else}}#{{/if}}">Newer</a></li></ul>', {encoding: 'utf8'});
+            fs.writeFileSync(rootPath + '/src/templates/index.hbs', '<div>Posts dated: {{dateStr}}{{> loop}}{{> pagination}}</div>', {encoding: 'utf8'});
         });
 
         after(function () {
@@ -65,11 +67,21 @@
             });
 
             it('Should have the correct date page content for June 2014', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-06/index.html', 'utf8')).to.equal('<div>Posts dated: June 2014<ul><li><a href="../../test-post1/">Test post 1</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: June 2014' + 
+                    '<ul><li><a href="../../test-post1/">Test post 1</a></li></ul>' + 
+                    '<ul><li><a href="#">Older</a></li><li><a href="#">Newer</a></li></ul>' +
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-06/index.html', 'utf8')).to.equal(expectedHtml);
             });
 
             it('Should have the correct date page content for December 2014', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-12/index.html', 'utf8')).to.equal('<div>Posts dated: December 2014<ul><li><a href="../../test-post2/">Test post 2</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: December 2014' + 
+                    '<ul><li><a href="../../test-post2/">Test post 2</a></li></ul>' + 
+                    '<ul><li><a href="#">Older</a></li><li><a href="#">Newer</a></li></ul>' +
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-12/index.html', 'utf8')).to.equal(expectedHtml);
             });
         });
 
@@ -124,7 +136,12 @@
             });
 
             it('Should have the correct date page content for June 2014', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-06/index.html', 'utf8')).to.equal('<div>Posts dated: June 2014<ul><li><a href="../../test-post1/">Test post 1</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: June 2014' + 
+                    '<ul><li><a href="../../test-post1/">Test post 1</a></li></ul>' + 
+                    '<ul><li><a href="#">Older</a></li><li><a href="#">Newer</a></li></ul>' +
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-06/index.html', 'utf8')).to.equal(expectedHtml);
             });
         });
 
@@ -142,7 +159,12 @@
             });
 
             it('Should have the correct date page content for December 2014', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-12/index.html', 'utf8')).to.equal('<div>Posts dated: December 2014<ul><li><a href="../../test-post1/">Test post 1</a></li><li><a href="../../test-post2/">Test post 2</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: December 2014' + 
+                    '<ul><li><a href="../../test-post1/">Test post 1</a></li><li><a href="../../test-post2/">Test post 2</a></li></ul>' + 
+                    '<ul><li><a href="../../date/2014-12/page/2">Older</a></li><li><a href="#">Newer</a></li></ul>' +
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-12/index.html', 'utf8')).to.equal(expectedHtml);
             });
 
             it('Should create the second paginated date page for December 2014', function () {
@@ -154,11 +176,21 @@
             });
 
             it('Should have the correct content for the second paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-12/page/2/index.html', 'utf8')).to.equal('<div>Posts dated: December 2014<ul><li><a href="../../test-post3/">Test post 3</a></li><li><a href="../../test-post4/">Test post 4</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: December 2014' + 
+                    '<ul><li><a href="../../../../test-post3">Test post 3</a></li><li><a href="../../../../test-post4">Test post 4</a></li></ul>' + 
+                    '<ul><li><a href="../3">Older</a></li><li><a href="../../">Newer</a></li></ul>' +
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-12/page/2/index.html', 'utf8')).to.equal(expectedHtml);
             });
 
             it('Should have the correct content for the third paginated page', function () {
-                expect(fs.readFileSync(rootPath + '/build/date/2014-12/page/3/index.html', 'utf8')).to.equal('<div>Posts dated: December 2014<ul><li><a href="../../test-post5/">Test post 5</a></li><li><a href="../../test-post6/">Test post 6</a></li></ul></div>');
+                var expectedHtml = '<div>' + 
+                    'Posts dated: December 2014' + 
+                    '<ul><li><a href="../../../../test-post5">Test post 5</a></li><li><a href="../../../../test-post6">Test post 6</a></li></ul>' +
+                    '<ul><li><a href="#">Older</a></li><li><a href="../2">Newer</a></li></ul>' + 
+                    '</div>';
+                expect(fs.readFileSync(rootPath + '/build/date/2014-12/page/3/index.html', 'utf8')).to.equal(expectedHtml);
             });
         });
 

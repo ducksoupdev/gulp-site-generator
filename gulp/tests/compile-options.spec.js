@@ -182,6 +182,27 @@
                 });
             });
         });
+
+        describe('When using the or helper', function() {
+            beforeEach(function() {
+                Handlebars.registerHelper('or', compileOptions('.').helpers.or);
+                this.html = "<div>{{#if (or val1 val2)}}<span>Values matched</span>{{else}}<span>Values not matched</span>{{/if}}</div>";
+            });
+
+            it('Should output the correct html when the values exist', function() {
+                var template = Handlebars.compile(this.html);
+                var result = template({
+                    val1: 'Test'
+                });
+                expect(result).to.equal('<div><span>Values matched</span></div>');
+            });
+
+            it('Should output the correct html when the values do not exist', function() {
+                var template = Handlebars.compile(this.html);
+                var result = template({});
+                expect(result).to.equal('<div><span>Values not matched</span></div>');
+            });
+        });
     });
 
 })();

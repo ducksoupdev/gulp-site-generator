@@ -1,3 +1,4 @@
+/* jshint -W030 */
 (function () {
     'use strict';
 
@@ -11,7 +12,7 @@
                 {tagStr:'content'},
                 {tagStr:'gulp'},
                 {tagStr:'testing'}
-            ]
+            ];
         });
 
         it('Should create tag classes', function() {

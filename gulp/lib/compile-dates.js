@@ -10,7 +10,6 @@
         glob = require('glob'),
         moment = require('moment'),
         _ = require('lodash'),
-        langUtils = require('mout/lang'),
         compileOptions = require('../lib/compile-options'),
         tags = require('../lib/tags'),
         dates = require('../lib/dates'),
@@ -30,7 +29,8 @@
                 error(err);
             } else {
                 var datePosts = {},
-                    posts = [];
+                    posts = [],
+                    allPosts = [];
 
                 files.forEach(function(file) {
                     var fileData = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -73,6 +73,8 @@
 
                 if (_.size(datePosts)) {
                     var promises = [];
+                    posts.sort(dates.sortFunc);
+                    allPosts = _.cloneDeep(posts);
 
                     for (var dateMonth in datePosts) {
                         // sort the dateMonth posts
@@ -102,16 +104,36 @@
                                 var pageNumber = i + 1;
                                 var nextPosts = paginatedPosts.splice(0, siteData.maxItems);
 
+                                // update the resource paths
+                                nextPosts.forEach(function(post) {
+                                    post.description = resolvePaths.resolve(post.meta.body, '../../../..');
+                                    post.url = '../../../../' + post.meta.slug;
+                                });
+
                                 // create custom template data for this paginated page
-                                var pageTemplateData = langUtils.deepClone(templateData);
+                                var pageTemplateData = _.cloneDeep(templateData);
                                 _.extend(pageTemplateData, {
                                     posts: nextPosts,
-                                    resourcePath: '../../..',
-                                    url: '../../..',
-                                    rss: '../../..' + siteData.rss,
-                                    allDates: dates.getAllDatesAsLinks('../../..', posts),
-                                    allTags: tags.getAllTagsAsLinks('../../..', posts)
+                                    resourcePath: '../../../..',
+                                    url: '../../../..',
+                                    rss: '../../../..' + siteData.rss,
+                                    allDates: dates.getAllDatesAsLinks('../../../..', allPosts),
+                                    allTags: tags.getAllTagsAsLinks('../../../..', allPosts)
                                 });
+                                delete pageTemplateData.pages;
+
+                                // add pagination data
+                                if (pageNumber === 2) {
+                                    pageTemplateData.prevUrl = '../../';
+                                } else {
+                                    pageTemplateData.prevUrl = '../' + (pageNumber - 1);
+                                }
+
+                                if (pageNumber < totalPages) {
+                                    pageTemplateData.nextUrl = '../' + (pageNumber + 1);
+                                }
+
+                                pageTemplateData.totalPages = totalPages;
 
                                 promises.push(new Promise(function(resolve, reject) {
                                     gulp.src(rootPath + '/src/templates/index.hbs')
@@ -123,14 +145,14 @@
                                 }));
                             }
 
-                            templateData.nextUrl = '../../date/' + dateMonth + '/page';
+                            templateData.nextUrl = '../../date/' + dateMonth + '/page/2';
                             templateData.totalPages = totalPages;
                         }
 
                         // update template
                         _.extend(templateData, {
-                            allDates: dates.getAllDatesAsLinks('../..', posts),
-                            allTags: tags.getAllTagsAsLinks('../..', posts)
+                            allDates: dates.getAllDatesAsLinks('../..', allPosts),
+                            allTags: tags.getAllTagsAsLinks('../..', allPosts)
                         });
 
                         promises.unshift(new Promise(function(resolve, reject) {

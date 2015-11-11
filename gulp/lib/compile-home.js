@@ -9,7 +9,6 @@
         path = require('path'),
         glob = require('glob'),
         moment = require('moment'),
-        langUtils = require('mout/lang'),
         _ = require('lodash'),
         compileOptions = require('../lib/compile-options'),
         tags = require('../lib/tags'),
@@ -30,6 +29,7 @@
                 error(err);
             } else {
                 var posts = [],
+                    allPosts = [],
                     pages = [];
 
                 files.forEach(function(file) {
@@ -62,6 +62,7 @@
 
                 if (posts.length || pages.length) {
                     posts.sort(dates.sortFunc);
+                    allPosts = _.cloneDeep(posts);
 
                     var templateData = {
                         date: moment().format('YYYY-MM-DD'),
@@ -74,8 +75,8 @@
                         pages: pages,
                         body_class: 'home-template',
                         rss: '.' + siteData.rss,
-                        allDates: dates.getAllDatesAsLinks('.', posts),
-                        allTags: tags.getAllTagsAsLinks('.', posts)
+                        allDates: dates.getAllDatesAsLinks('.', allPosts),
+                        allTags: tags.getAllTagsAsLinks('.', allPosts)
                     };
 
                     var promises = [];
@@ -98,16 +99,29 @@
                             });
 
                             // create custom template data for this paginated page
-                            var pageTemplateData = langUtils.deepClone(templateData);
+                            var pageTemplateData = _.cloneDeep(templateData);
                             _.extend(pageTemplateData, {
                                 posts: nextPosts,
                                 resourcePath: '../..',
                                 url: '../..',
                                 rss: '../..' + siteData.rss,
-                                allDates: dates.getAllDatesAsLinks('../..', posts),
-                                allTags: tags.getAllTagsAsLinks('../..', posts)
+                                allDates: dates.getAllDatesAsLinks('../..', allPosts),
+                                allTags: tags.getAllTagsAsLinks('../..', allPosts)
                             });
                             delete pageTemplateData.pages;
+
+                            // add pagination data
+                            if (pageNumber === 2) {
+                                pageTemplateData.prevUrl = '../../';
+                            } else {
+                                pageTemplateData.prevUrl = '../' + (pageNumber - 1);
+                            }
+
+                            if (pageNumber < totalPages) {
+                                pageTemplateData.nextUrl = '../' + (pageNumber + 1);
+                            }
+
+                            pageTemplateData.totalPages = totalPages;
 
                             promises.push(new Promise(function(resolve, reject) {
                                 gulp.src(rootPath + '/src/templates/index.hbs')

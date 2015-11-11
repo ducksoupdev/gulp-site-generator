@@ -1,3 +1,4 @@
+/* jshint -W030 */
 (function () {
     'use strict';
 
@@ -11,7 +12,7 @@
             this.posts = [
                 { date: '2014-06-11' },
                 { date: '2014-12-11' }
-            ]
+            ];
         });
 
         it('Should create date link', function() {

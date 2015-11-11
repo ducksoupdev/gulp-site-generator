@@ -93,6 +93,9 @@
                         return this.resourcePath + path;
                     }
                     return "." + path;
+                },
+                or: function (v1, v2) {
+                    return v1 || v2;
                 }
             }
         };

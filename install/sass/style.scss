@@ -36,6 +36,14 @@ body {
   @include clearfix();
 }
 
+.pagination {
+    @include clearfix();
+
+    &.pagination-none {
+        display: none;
+    }
+}
+
 @media screen and (min-width: 768px) {
 
   .main, article {
