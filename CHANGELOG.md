@@ -1,5 +1,15 @@
 # Change log
 
+## v0.1.20 (2015-11-11)
+
+**Features**
+
+* Add site data to individual pages or posts
+
+**Fixes**
+
+* Fix issue with pagination on home, date and tag pages
+
 ## v0.1.19 (2015-10-09)
 
 **Fixes**

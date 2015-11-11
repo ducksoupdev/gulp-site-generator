@@ -96,6 +96,7 @@
                     var promises = [];
                     templatesToCreate.forEach(function(templateToCreate) {
                         _.extend(templateToCreate.templateData.post, {
+                            site: siteData,
                             allDates: dates.getAllDatesAsLinks('..', posts),
                             allTags: tags.getAllTagsAsLinks('..', posts)
                         });

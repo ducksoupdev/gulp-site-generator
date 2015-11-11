@@ -40,17 +40,17 @@
 
             // set-up files:
             fs.writeFileSync(rootPath + '/site.json',
-                '{"title":"Test site"}', {
+                '{"title":"Test site","testSiteVar":"my test value"}', {
                     encoding: 'utf8'
                 });
             fs.writeFileSync(rootPath +
                 '/src/templates/page.hbs',
-                '<div class="page"><h1>{{post.title}}</h1>{{{post.body}}}</div>', {
+                '<div class="page"><h1>{{post.title}}</h1>{{{post.body}}}<h3>{{site.testSiteVar}}</h3><h4>{{post.site.testSiteVar}}</h4></div>', {
                     encoding: 'utf8'
                 });
             fs.writeFileSync(rootPath +
                 '/src/templates/post.hbs',
-                '<div class="post"><h1>{{post.title}}</h1>{{{post.body}}}</div>', {
+                '<div class="post"><h1>{{post.title}}</h1>{{{post.body}}}<h3>{{site.testSiteVar}}</h3><h4>{{post.site.testSiteVar}}</h4></div>', {
                     encoding: 'utf8'
                 });
         });
@@ -81,7 +81,7 @@
                     expect(fs.readFileSync(rootPath +
                         '/build/test-page/index.html',
                         'utf8')).to.equal(
-                        '<div class="page"><h1>Test page</h1><p>Test page content</p></div>'
+                        '<div class="page"><h1>Test page</h1><p>Test page content</p><h3>my test value</h3><h4>my test value</h4></div>'
                     );
                 });
         });
@@ -108,7 +108,7 @@
                     expect(fs.readFileSync(rootPath +
                         '/build/test-page-no-slug/index.html',
                         'utf8')).to.equal(
-                        '<div class="page"><h1>Test page no slug</h1><p>Test page content</p></div>'
+                        '<div class="page"><h1>Test page no slug</h1><p>Test page content</p><h3>my test value</h3><h4>my test value</h4></div>'
                     );
                 });
         });
@@ -135,7 +135,7 @@
                     expect(fs.readFileSync(rootPath +
                         '/build/test-post/index.html',
                         'utf8')).to.equal(
-                        '<div class="post"><h1>Test post</h1><p>Test post content</p></div>'
+                        '<div class="post"><h1>Test post</h1><p>Test post content</p><h3>my test value</h3><h4>my test value</h4></div>'
                     );
                 });
         });
@@ -162,7 +162,7 @@
                     expect(fs.readFileSync(rootPath +
                         '/build/test-post-no-slug/index.html',
                         'utf8')).to.equal(
-                        '<div class="post"><h1>Test post no slug</h1><p>Test post content</p></div>'
+                        '<div class="post"><h1>Test post no slug</h1><p>Test post content</p><h3>my test value</h3><h4>my test value</h4></div>'
                     );
                 });
         });
