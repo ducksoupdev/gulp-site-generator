@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.21 (2015-12-16)
+
+**Fixes**
+
+* Fix missing pagination partial from the install script
+
 ## v0.1.20 (2015-11-11)
 
 **Features**

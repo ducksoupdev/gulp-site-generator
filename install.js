@@ -46,6 +46,7 @@ var installFiles = {
         { file: 'templates/partials/header.hbs', encoding: 'utf8' },
         { file: 'templates/partials/loop.hbs', encoding: 'utf8' },
         { file: 'templates/partials/navigation.hbs', encoding: 'utf8' },
+        { file: 'templates/partials/pagination.hbs', encoding: 'utf8' },
         { file: 'templates/partials/sidebar.hbs', encoding: 'utf8' }
     ]
 };
