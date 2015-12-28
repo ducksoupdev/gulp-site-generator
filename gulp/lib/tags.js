@@ -1,23 +1,35 @@
 (function () {
     'use strict';
 
+    var tagObjToArray = function(tagObj) {
+        var tags = [];
+        if (tagObj) {
+            if (typeof tagObj === 'string' || tagObj instanceof String) {
+                tags = tagObj.split(' ');
+            } else if (Array.isArray(tagObj)) {
+                tags = tagObj;
+            }
+        }
+        return tags;
+    }
+
     module.exports = {
-        getTagClasses: function (tagStr) {
-            if (!tagStr) {
+        getTagClasses: function (tagObj) {
+            var tags = tagObjToArray(tagObj);
+            if (!tags.length) {
                 return undefined;
             }
-            var tags = tagStr.split(' ');
             var classStr = '';
             tags.forEach(function (tag) {
                 classStr += ' tag-' + tag
             });
             return classStr;
         },
-        getTagsAsLinks: function (path, tagStr) {
-            if (!tagStr) {
+        getTagsAsLinks: function (path, tagObj) {
+            var tags = tagObjToArray(tagObj);
+            if (!tags.length) {
                 return undefined;
             }
-            var tags = tagStr.split(' ');
             var tagLinks = [];
             tags.forEach(function (tag) {
                 tagLinks.push('<a href="' + path + '/tag/' + tag + '">' + tag + '</a>');
@@ -34,7 +46,7 @@
             var allTags = {}, allTagsArray = [], self = this;
             posts.forEach(function (post) {
                 if (post.tagStr) {
-                    var tagList = post.tagStr.split(' ');
+                    var tagList = tagObjToArray(post.tagStr);
                     tagList.forEach(function (tag) {
                         if (!allTags[tag]) {
                             allTags[tag] = path + '/tag/' + tag;
