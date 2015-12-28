@@ -34,7 +34,11 @@
             return allDatesArray;
         },
         sortFunc: function(a, b) {
-            return new Date(a.date).getTime() < new Date(b.date).getTime();
+            let timeA = new Date(a.date).getTime(),
+                timeB = new Date(b.date).getTime();
+            if (timeA  > timeB) return -1;
+            if (timeA == timeB) return  0;
+            if (timeA  < timeB) return  1;
         }
     };
 })();
