@@ -33,7 +33,7 @@
                         title: fileData.title,
                         description: resolvePaths.resolve(fileData.body, siteData.url),
                         url: siteData.url + "/" + fileData.slug + "/",
-                        tags: (fileData.tags ? fileData.tags.split(" ") : undefined),
+                        tags: (fileData.tags ? (fileData.tags.split ? fileData.tags.split(" ") : fileData.tags) : undefined), // tags can be either string or array
                         date: fileData.date
                     };
 
