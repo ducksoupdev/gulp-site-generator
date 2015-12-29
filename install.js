@@ -1,3 +1,5 @@
+/* global process, __dirname */
+
 /*
  Simple install script for the gulp site generator
 
@@ -10,6 +12,30 @@
 
 var fs = require('fs'),
     path = require('path');
+    
+function extend(destination, source) {
+    for (var property in source) {
+        if (source[property] && source[property].constructor &&
+            source[property].constructor === Object) {
+            destination[property] = destination[property] || {};
+            destination[property] = extend(destination[property], source[property]);
+        } else {
+            destination[property] = source[property];
+        }
+    }
+    return destination;
+}
+
+function writeFileSync(file, obj, options) {
+    options = options || {};
+
+    var spaces = typeof options === "object" && options !== null ? "spaces" in options ? options.spaces : this.spaces : this.spaces;
+
+    var str = JSON.stringify(obj, options.replacer, spaces) + "\n";
+    
+    // not sure if fs.writeFileSync returns anything, but just in case
+    return fs.writeFileSync(file, str, options);
+}
 
 var rootPath = process.cwd();
 var rootPathName = path.basename(__dirname);
@@ -84,6 +110,35 @@ installFiles.files.forEach(function(file) {
         filesInstalled++;
     }
 });
+
+// package.json changes
+var packages = null, 
+    packagesContent = fs.readFileSync(rootPath + '/package.json', { encoding: 'utf8' });
+
+try {
+    packages = JSON.parse(packagesContent);
+    
+    // cleanup package.json
+    var dependencies = packages.dependencies;
+    packages.devDependencies = {};
+    extend(packages.devDependencies, dependencies);
+    
+    delete packages.dependencies;
+    delete packages.keywords;
+    delete packages.scripts;
+    packages.version = "0.1.0";
+    packages.name = "";
+    packages.description = "";
+    packages.author = "";
+    
+    // write out the new package.json
+    writeFileSync(rootPath + '/package.json', packages, {
+        spaces: 4,
+        encoding: 'utf8'
+    });
+} catch (err) {
+    console.error(err);
+}
 
 console.info(directoriesCreated + ' directories created and ' + filesInstalled + ' files installed!');
 if (directoriesCreated && filesInstalled) {

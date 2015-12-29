@@ -1,5 +1,16 @@
 # Change log
 
+## v0.1.23 (2015-12-29)
+
+**Features**
+
+* Update install script to modify package.json dependencies
+* Uplift node modules
+
+**Fixes**
+
+* Update Travis CI build config
+
 ## v0.1.22 (2015-12-29)
 
 **Features**
