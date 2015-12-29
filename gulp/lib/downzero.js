@@ -1,3 +1,4 @@
+"use strict";
 // Functions to imitate the behavior of Downsize@0.0.5 with 'words: "0"' (heavily based on Downsize)
 // This is used to extract the first image from the post content which is used as a header
 

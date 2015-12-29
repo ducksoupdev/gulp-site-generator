@@ -1,10 +1,8 @@
-(function () {
-    'use strict';
+"use strict";
 
-    var gulp = require('gulp'),
-        removeDir = require('../lib/remove-dir');
+var gulp = require("gulp"),
+    removeDir = require("../lib/remove-dir");
 
-    gulp.task('clobber', function() {
-        return removeDir('./build');
-    });
-})();
+gulp.task("clobber", function () {
+    return removeDir("./build");
+});

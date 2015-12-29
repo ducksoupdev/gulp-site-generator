@@ -84,6 +84,21 @@ So putting it all together, the installation steps are:
     $ npm install
     $ gulp
 
+## Updating
+
+Updating the generator submodule to the latest version can be done using git:
+
+    $ cd tools
+    $ git remote update
+    $ git pull
+    $ cd ..
+
+The generator has an update script that can then be run:
+
+    $ node tools/update
+
+The script updates the `package.json` in the root of your site and updates any dependencies to the latest versions.
+
 ## Tasks
 
 When you have created templates, content and assets, the default task will run the generator:

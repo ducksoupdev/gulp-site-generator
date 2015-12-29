@@ -1,4 +1,5 @@
 /* global process, __dirname */
+"use strict";
 
 /*
  Simple install script for the gulp site generator
@@ -7,11 +8,12 @@
  * Creates an src directory
  * Creates the following directories: src/content, src/templates, src/sass, src/content, src/content/pages src/content/posts
  * Creates the following files: src/content/*.md, src/templates/*.hbs, src/sass/*.scss, src/images/*.jpg
-
+ 
  */
 
-var fs = require('fs'),
-    path = require('path');
+var fs = require("fs"),
+    path = require("path"),
+    jsonFile = require("./install/lib/json-file");
     
 function extend(destination, source) {
     for (var property in source) {
@@ -26,94 +28,55 @@ function extend(destination, source) {
     return destination;
 }
 
-function writeFileSync(file, obj, options) {
-    options = options || {};
+var rootPath = process.cwd(),
+    rootPathName = path.basename(__dirname),
+    filesInstalled = 0,
+    directoriesCreated = 0;
 
-    var spaces = typeof options === "object" && options !== null ? "spaces" in options ? options.spaces : this.spaces : this.spaces;
+var fileIndex = fs.readFileSync(__dirname + "/install/files.json", { encoding: "utf8" });
+var fileList = JSON.parse(fileIndex);
 
-    var str = JSON.stringify(obj, options.replacer, spaces) + "\n";
-    
-    // not sure if fs.writeFileSync returns anything, but just in case
-    return fs.writeFileSync(file, str, options);
-}
-
-var rootPath = process.cwd();
-var rootPathName = path.basename(__dirname);
-var filesInstalled = 0;
-var directoriesCreated = 0;
-
-var rootFiles = [
-    { file: 'gulpfile.js', encoding: 'utf8' },
-    { file: 'package.json', encoding: 'utf8' },
-    { file: 'site.json', encoding: 'utf8' }
-];
-
-var installFiles = {
-    directories: [
-        'content',
-        'content/pages',
-        'content/posts',
-        'sass',
-        'images',
-        'templates',
-        'templates/partials'
-    ],
-    files: [
-        { file: 'content/index.md', encoding: 'utf8' },
-        { file: 'content/template.md', encoding: 'utf8' },
-        { file: 'content/pages/about.md', encoding: 'utf8' },
-        { file: 'content/posts/sample-blog-post.md', encoding: 'utf8' },
-        { file: 'sass/style.scss', encoding: 'utf8' },
-        { file: 'images/sample-blog-post.jpg', encoding: 'binary' },
-        { file: 'templates/index.hbs', encoding: 'utf8' },
-        { file: 'templates/page.hbs', encoding: 'utf8' },
-        { file: 'templates/post.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/footer.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/header.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/loop.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/navigation.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/pagination.hbs', encoding: 'utf8' },
-        { file: 'templates/partials/sidebar.hbs', encoding: 'utf8' }
-    ]
-};
-
-rootFiles.forEach(function (file) {
-    if (!fs.existsSync(rootPath + '/' + file.file)) {
-        var contents = fs.readFileSync(__dirname + '/' + file.file, file.encoding);
-
-        // replace the path to the gulp tasks
-        if (file.file === 'gulpfile.js') {
-            contents = contents.replace(/\.\/gulp\/tasks/, './' + rootPathName + '/gulp/tasks/');
-        }
-
-        fs.writeFileSync(rootPath + '/' + file.file, contents, {encoding: file.encoding});
-        filesInstalled++;
-    }
-});
-
-if (!fs.existsSync(rootPath + '/src')) {
-    fs.mkdirSync(rootPath + '/src');
+if (!fs.existsSync(rootPath + "/src")) {
+    fs.mkdirSync(rootPath + "/src");
     directoriesCreated++;
 }
 
-installFiles.directories.forEach(function(dir) {
-    if (!fs.existsSync(rootPath + '/src/' + dir)) {
-        fs.mkdirSync(rootPath + '/src/' + dir);
-        directoriesCreated++;
-    }
-});
+fileList.files.forEach(function (file) {
+    var contents = null, isRootFile = file.file.indexOf("/") === -1;
+    
+    var filePath = (isRootFile ? rootPath + "/" + file.file : rootPath + "/src/" + file.file); 
+    
+    if (!fs.existsSync(filePath)) {
+        if (!isRootFile) {
+            // create the directory if required
+            var dir = path.dirname(file.file), dirPath = path.join(rootPath + "/src/" + dir);
+            
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath);
+                directoriesCreated++;
+            }
+            
+            contents = fs.readFileSync(__dirname + "/install/" + file.file, file.encoding);
+            fs.writeFileSync(filePath, contents, { encoding: file.encoding });
+            filesInstalled++;
+            
+        } else {
+            contents = fs.readFileSync(__dirname + "/" + file.file, file.encoding);
 
-installFiles.files.forEach(function(file) {
-    if (!fs.existsSync(rootPath + '/src/' + file.file)) {
-        var contents = fs.readFileSync(__dirname + '/install/' + file.file, file.encoding);
-        fs.writeFileSync(rootPath + '/src/' + file.file, contents, {encoding: file.encoding});
-        filesInstalled++;
+            // replace the path to the gulp tasks
+            if (file.file === "gulpfile.js") {
+                contents = contents.replace(/\.\/gulp\/tasks/, "./" + rootPathName + "/gulp/tasks/");
+            }
+
+            fs.writeFileSync(filePath, contents, { encoding: file.encoding });
+            filesInstalled++;
+        }
     }
 });
 
 // package.json changes
 var packages = null, 
-    packagesContent = fs.readFileSync(rootPath + '/package.json', { encoding: 'utf8' });
+    packagesContent = fs.readFileSync(rootPath + "/package.json", { encoding: "utf8" });
 
 try {
     packages = JSON.parse(packagesContent);
@@ -132,15 +95,20 @@ try {
     packages.author = "";
     
     // write out the new package.json
-    writeFileSync(rootPath + '/package.json', packages, {
+    jsonFile.writeJsonFile(rootPath + "/package.json", packages, {
         spaces: 4,
-        encoding: 'utf8'
+        encoding: "utf8"
     });
 } catch (err) {
     console.error(err);
 }
 
-console.info(directoriesCreated + ' directories created and ' + filesInstalled + ' files installed!');
+console.info("%d %s created and %d %s installed!", 
+        directoriesCreated, 
+        (directoriesCreated === 1 ? "directory": "directories"), 
+        filesInstalled,
+        (filesInstalled === 1 ? "file" : "files"));
+        
 if (directoriesCreated && filesInstalled) {
-    console.info('Run \'npm install\' then \'gulp\' to get started');
+    console.info("Run 'npm install' then 'gulp' to get started");
 }

@@ -1,11 +1,9 @@
-(function () {
-    'use strict';
+"use strict";
 
-    /* simple filter for mocking a list of promises */
+/* simple filter for mocking a list of promises */
 
-    module.exports = {
-        filter: function (promises) {
-            return promises;
-        }
+module.exports = {
+    filter: function (promises) {
+        return promises;
     }
-})();
+};

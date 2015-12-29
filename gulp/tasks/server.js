@@ -1,12 +1,10 @@
-(function () {
-    'use strict';
+"use strict";
 
-    var gulp = require('gulp'),
-        connect = require('gulp-connect');
+var gulp = require("gulp"),
+    connect = require("gulp-connect");
 
-    gulp.task('server', function() {
-        connect.server({
-            root: 'build'
-        });
+gulp.task("server", function () {
+    connect.server({
+        root: "build"
     });
-})();
+});

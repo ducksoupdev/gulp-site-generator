@@ -1,7 +1,5 @@
-(function () {
-    'use strict';
+"use strict";
 
-    var gulp = require('gulp');
+var gulp = require("gulp");
 
-    gulp.task('default', ['minify-html']);
-})();
+gulp.task("default", ["minify-html"]);

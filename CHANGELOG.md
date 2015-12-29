@@ -1,5 +1,13 @@
 # Change log
 
+## v0.1.24 (2015-12-30)
+
+**Features**
+
+* Add update script for easy node module upgrades. Readme edited with info on how to update.
+* Refactor install script
+* Code cleanup
+
 ## v0.1.23 (2015-12-29)
 
 **Features**
