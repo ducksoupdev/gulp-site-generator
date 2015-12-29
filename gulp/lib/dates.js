@@ -34,7 +34,7 @@
             return allDatesArray;
         },
         sortFunc: function(a, b) {
-            let timeA = new Date(a.date).getTime(),
+            var timeA = new Date(a.date).getTime(),
                 timeB = new Date(b.date).getTime();
             if (timeA  > timeB) return -1;
             if (timeA == timeB) return  0;
