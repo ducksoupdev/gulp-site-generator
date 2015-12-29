@@ -15,12 +15,12 @@
                 excerpt = excerpt.replace(/(\r\n|\n|\r)+/gm, ' ');
                 var title = downsize(excerpt, { words: 10 });
 
-                if (!fileData.slug) {
-                    fileData.slug = stringUtils.slugify(title, '-');
-                }
-
                 if (!fileData.title) {
                     fileData.title = title;
+                }
+
+                if (!fileData.slug) {
+                    fileData.slug = stringUtils.slugify(fileData.title, '-');
                 }
 
                 if (!fileData.template && !fileData.date) {
