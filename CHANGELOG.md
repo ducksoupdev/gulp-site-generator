@@ -1,5 +1,17 @@
 # Change log
 
+## v0.1.22 (2015-12-29)
+
+**Features**
+
+* Support leaving out the initial --- for front-matter (PR from Cybolic)
+* Support tags defined as an array as well as a string (PR from Cybolic)
+
+**Fixes**
+
+* Fix automatically generated slug doesn't link correctly (PR from Cybolic)
+* Fix post sorting is not correct (PR from Cybolic)
+
 ## v0.1.21 (2015-12-16)
 
 **Fixes**
