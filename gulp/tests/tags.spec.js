@@ -8,6 +8,7 @@
     describe('When parsing tags', function() {
         beforeEach(function() {
             this.tagStr = 'content gulp testing';
+            this.tagArray = ['content', 'gulp', 'testing'];
             this.posts = [
                 {tagStr:'content'},
                 {tagStr:'gulp'},
@@ -21,6 +22,10 @@
 
         it('Should return undefined if no tags exist', function() {
             expect(tags.getTagClasses(null)).to.be.undefined;
+        });
+
+        it('Should support tags as Array', function() {
+            expect(tags.getTagClasses(this.tagArray)).to.equal(' tag-content tag-gulp tag-testing');
         });
 
         it('Should create tag links', function() {
