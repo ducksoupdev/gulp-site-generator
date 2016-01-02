@@ -7,8 +7,9 @@ gulp.task("help", function () {
     console.log("Tasks available:\n");
     console.log("* default\n");
     console.log("* develop\n");
-    console.log("* sass\n");
     console.log("* clobber\n");
+    console.log("* image-min\n");
+    console.log("* sass\n");
     console.log("* server\n");
     console.log("* help\n");
 });

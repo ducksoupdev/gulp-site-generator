@@ -2,4 +2,4 @@
 
 var gulp = require("gulp");
 
-gulp.task("default", ["build"]);
+gulp.task("build", ["minify-html"]);

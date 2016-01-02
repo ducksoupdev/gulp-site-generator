@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.25 (2016-01-02)
+
+**Features**
+
+* Add image compression setting to site.json. If set to false, no image compression is performed.
+
 ## v0.1.24 (2015-12-30)
 
 **Features**

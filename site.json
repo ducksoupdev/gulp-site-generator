@@ -13,5 +13,6 @@
       "name": "Matt Levy",
       "bio": "Practicing the art of front-end development"
     }
-  }
+  },
+  "imageCompression": true
 }
