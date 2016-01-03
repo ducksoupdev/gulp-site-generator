@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.26 (2016-01-03)
+
+**Fixes**
+
+* Fix issue with missing node modules after running update script.
+
 ## v0.1.25 (2016-01-02)
 
 **Features**
