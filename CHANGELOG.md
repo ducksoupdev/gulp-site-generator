@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.27 (2016-01-03)
+
+**Fixes**
+
+* Fix issue with Handlebars date helper and the wrong format.
+
 ## v0.1.26 (2016-01-03)
 
 **Fixes**

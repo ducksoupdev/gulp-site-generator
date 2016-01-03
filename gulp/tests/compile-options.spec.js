@@ -16,9 +16,9 @@ describe('Given the compile options', function () {
         it('Should format the date as MMM Do, YYYY', function () {
             var template = Handlebars.compile(this.html);
             var result = template({
-                date: '2015-09-15'
+                date: '2015-10-15'
             });
-            expect(result).to.equal('<span>Sep 15th, 2015</span>');
+            expect(result).to.equal('<span>Oct 15th, 2015</span>');
         });
     });
 
