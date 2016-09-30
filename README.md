@@ -127,6 +127,7 @@ You are free to add properties to this file for use in your Handlebars templates
 * concatJs (array) (optional) - a list of javascript files to combine and minify
 * styleSheet (string) (optional) - the name of your main CSS file created by the sass task
 * imageCompression (boolean) (optional) - a boolean value to enable/disable image compresssion on build
+* uncssIgnore (array) (optional) - a list of selectors that uncss should ignore (for example ".container" or "#my-element")
 
 ## Content
 
