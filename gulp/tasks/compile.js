@@ -10,32 +10,23 @@ var gulp = require("gulp"),
     removeDir = require("../lib/remove-dir");
 
 gulp.task("compile", ["content"], function (done) {
+    var rootPath = ".";
     var compilePromises = [];
 
     // pages
-    compilePromises.push(new Promise(function (resolve, reject) {
-        compilePages.run(".", resolve, reject);
-    }));
+    compilePromises.push(compilePages(rootPath));
 
     // tags
-    compilePromises.push(new Promise(function (resolve, reject) {
-        compileTags.run(".", resolve, reject);
-    }));
+    compilePromises.push(compileTags(rootPath));
 
     // dates
-    compilePromises.push(new Promise(function (resolve, reject) {
-        compileDates.run(".", resolve, reject);
-    }));
+    compilePromises.push(compileDates(rootPath));
 
     // rss feed compilation
-    compilePromises.push(new Promise(function (resolve, reject) {
-        compileRss.run(".", resolve, reject);
-    }));
+    compilePromises.push(compileRss(rootPath));
 
     // index page generation
-    compilePromises.push(new Promise(function (resolve, reject) {
-        compileHome.run(".", resolve, reject);
-    }));
+    compilePromises.push(compileHome(rootPath));
 
     Promise.all(compilePromises)
         .then(function () {

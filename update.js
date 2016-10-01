@@ -1,4 +1,3 @@
-/* global process, __dirname */
 "use strict";
 
 /*
