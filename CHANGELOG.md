@@ -1,5 +1,11 @@
 # Change log
 
+## v0.1.28 (2016-11-11)
+
+**Fixes**
+
+* Fix livereload race condition + HBS watch [#24]
+
 ## v0.1.27 (2016-01-03)
 
 **Fixes**
