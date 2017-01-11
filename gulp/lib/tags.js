@@ -42,7 +42,7 @@ module.exports = {
         return "<a href=\"" + path + "/tag/" + tag + "\">" + tag + "</a>";
     },
     getAllTagsAsLinks: function (path, posts) {
-        var allTags = {}, allTagsArray = [], self = this;
+        var allTags = {}, allTagsArray = [];
         posts.forEach(function (post) {
             if (post.tagStr) {
                 var tagList = tagObjToArray(post.tagStr);

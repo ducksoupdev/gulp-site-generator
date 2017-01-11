@@ -1,6 +1,3 @@
-/* globals it, afterEach, beforeEach, after, describe, before */
-/* jshint -W030 */
-/* jshint -W079 */
 "use strict";
 
 var tags = require("../lib/tags"),

@@ -1,4 +1,3 @@
-/* global process */
 "use strict";
 
 var minimist = require("minimist");

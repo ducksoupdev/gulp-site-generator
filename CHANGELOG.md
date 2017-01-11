@@ -1,5 +1,21 @@
 # Change log
 
+## v0.2.0 (2017-01-11)
+
+**Features**
+
+* Refactor compilation
+* Uplift npm packages
+* Remove temp files
+* Code cleanup
+* Fix image npm module versions
+
+## v0.1.29 (2017-01-11)
+
+**Features**
+
+* Add cssIgnore configuration option
+
 ## v0.1.28 (2016-11-11)
 
 **Fixes**

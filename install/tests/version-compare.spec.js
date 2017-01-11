@@ -1,5 +1,3 @@
-/* globals it, afterEach, beforeEach, after, describe, before */
-/* jshint -W079 */
 "use strict";
 
 var versionCompare = require("../lib/version-compare"),

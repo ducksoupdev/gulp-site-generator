@@ -1,0 +1,41 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "no-console": [
+            "error", {
+                "allow": ["info", "warn", "error"]
+            }
+        ]
+    },
+    "globals": {
+        "process": false,
+        "it": false,
+        "afterEach": false,
+        "beforeEach": false,
+        "after": false,
+        "describe": false,
+        "before": false
+    }
+}

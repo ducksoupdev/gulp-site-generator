@@ -91,7 +91,10 @@ module.exports = function (rootPath) {
                 if (path && this.resourcePath && this.resourcePath !== "") {
                     return this.resourcePath + path;
                 }
-                return "." + path;
+                if (/^\//.test(path)) {
+                    path = path.substring(1);
+                }
+                return "" + path;
             },
             or: function (v1, v2) {
                 return v1 || v2;
