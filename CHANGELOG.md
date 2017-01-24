@@ -1,10 +1,16 @@
 # Change log
 
+## v0.2.1 (2017-01-24)
+
+**Features**
+
+* Removed comma in getTagsAsLinks [#27]
+
 ## v0.2.0 (2017-01-11)
 
 **Features**
 
-* Refactor compilation
+* Refactor compilation [#26]
 * Uplift npm packages
 * Remove temp files
 * Code cleanup
@@ -63,13 +69,13 @@
 
 **Features**
 
-* Support leaving out the initial --- for front-matter (PR from Cybolic)
-* Support tags defined as an array as well as a string (PR from Cybolic)
+* Support leaving out the initial --- for front-matter [#12]
+* Support tags defined as an array as well as a string [#13]
 
 **Fixes**
 
-* Fix automatically generated slug doesn't link correctly (PR from Cybolic)
-* Fix post sorting is not correct (PR from Cybolic)
+* Fix automatically generated slug doesn't link correctly [#11]
+* Fix post sorting is not correct [#10]
 
 ## v0.1.21 (2015-12-16)
 
