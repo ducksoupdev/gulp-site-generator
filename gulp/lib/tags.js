@@ -1,5 +1,5 @@
 "use strict";
-
+	
 var tagObjToArray = function (tagObj) {
     var tags = [];
     if (tagObj) {
@@ -33,7 +33,7 @@ module.exports = {
         tags.forEach(function (tag) {
             tagLinks.push("<a href=\"" + path + "/tag/" + tag + "\">" + tag + "</a>");
         });
-        return tagLinks.join(", ");
+        return tagLinks.join("");
     },
     getTagAsLink: function (path, tag) {
         if (!tag) {
