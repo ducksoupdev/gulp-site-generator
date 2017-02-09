@@ -117,4 +117,3 @@ if (fs.existsSync(rootPath + "/package.json")) {
         console.info("Run 'npm install'");
     }
 }
-
