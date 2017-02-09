@@ -6,7 +6,7 @@ var gulp = require("gulp"),
 gulp.task("minify-html", ["uncss"], function () {
     return gulp.src("./build/**/*.html")
         .pipe(minifyHTML({
-            comments: true,
+            comments: false,
             spare: true
         }))
         .pipe(gulp.dest("./build"));
