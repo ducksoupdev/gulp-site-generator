@@ -1,5 +1,13 @@
 # Change log
 
+## v0.2.2 (2017-02-09)
+
+**Fixes**
+
+* Added eslint [#28]
+* New lines for some files [#28]
+* Changed .editorconfig to use utf-8 [#28]
+
 ## v0.2.1 (2017-01-24)
 
 **Features**
