@@ -4,8 +4,8 @@ var gulp = require("gulp");
 
 gulp.task("test", function (done) {
     var mocha = require("gulp-mocha"),
-    istanbul = require("gulp-istanbul");
-    
+        istanbul = require("gulp-istanbul");
+
     gulp.src(["./gulp/lib/*.js", "./install/lib/*.js"])
         .pipe(istanbul())
         .pipe(istanbul.hookRequire())
