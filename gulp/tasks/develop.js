@@ -2,6 +2,7 @@
 
 var gulp = require("gulp"),
     connect = require("gulp-connect"),
+    open = require("gulp-open"),
     gutil = require("gulp-util");
 
 gulp.task("livereload-connect", ["build"], function () {
@@ -9,6 +10,7 @@ gulp.task("livereload-connect", ["build"], function () {
         root: "./build",
         livereload: true
     });
+    gulp.src(__filename).pipe(open({uri: "http://localhost:8080"}));
 });
 
 gulp.task("livereload-html", function () {

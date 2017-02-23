@@ -1,5 +1,12 @@
 # Change log
 
+## v0.3.1 (2017-02-23)
+
+**Features**
+
+* Open browser in development task
+* Open browser in server task
+
 ## v0.3.0 (2017-02-23)
 
 **Features**
