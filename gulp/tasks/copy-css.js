@@ -4,7 +4,7 @@ var gulp = require("gulp"),
     fs = require("fs"),
     minifyCSS = require("gulp-minify-css");
 
-gulp.task("copy-css", function () {
+gulp.task("copy-css", ["sass"], function () {
     var siteData = JSON.parse(fs.readFileSync("./site.json", "utf8"));
     var styleSheet = "style.css";
     if (siteData.styleSheet) {

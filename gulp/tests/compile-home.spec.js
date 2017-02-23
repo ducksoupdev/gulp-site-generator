@@ -56,7 +56,7 @@ describe("Given the home page", function () {
     describe("When compiling the home page", function () {
         before(function (done) {
             fs.writeFileSync(rootPath + "/build/content/pages/test-page.json", "{\"slug\":\"test-page\",\"title\":\"Test page\",\"template\":\"page.hbs\",\"body\":\"<p>Test page content</p>\"}", { encoding: "utf8" });
-            fs.writeFileSync(rootPath + "/build/content/posts/test-post.json", "{\"slug\":\"test-post\",\"title\":\"Test post\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
+            fs.writeFileSync(rootPath + "/build/content/posts/test-post1.json", "{\"slug\":\"test-post1\",\"title\":\"Test post 1\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
             compileHome(rootPath).then(done, errorStub);
         });
 
@@ -71,7 +71,7 @@ describe("Given the home page", function () {
                 "<a href=\"test-page/\">Test page</a>" +
                 "</li>" +
                 "<li>" +
-                "<a href=\"test-post/\">Test post</a>" +
+                "<a href=\"test-post1/\">Test post 1</a>" +
                 "</li>" +
                 "</ul>" +
                 "<ul><li><a href=\"#\">Older</a></li><li><a href=\"#\">Newer</a></li></ul>" +
@@ -122,10 +122,32 @@ describe("Given the home page", function () {
     });
 
     describe("When compiling the home page excluding draft templates", function () {
+        var minimistStub, newCompileHome;
+        
         before(function (done) {
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+            minimistStub = function () {
+                return {
+                    compile: "published"
+                };
+            };
+            mockery.registerAllowable("../lib/drafts");
+            mockery.registerMock("minimist", minimistStub);
+            
             fs.writeFileSync(rootPath + "/build/content/pages/test-page.json", "{\"slug\":\"test-page\",\"title\":\"Test page\",\"template\":\"page.hbs\",\"body\":\"<p>Test page content</p>\"}", { encoding: "utf8" });
-            fs.writeFileSync(rootPath + "/build/content/posts/test-post.json", "{\"slug\":\"test-post\",\"title\":\"Test post\",\"template\":\"post.hbs\",\"status\":\"draft\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
-            compileHome(rootPath).then(done, errorStub);
+            fs.writeFileSync(rootPath + "/build/content/posts/test-post1.json", "{\"slug\":\"test-post1\",\"title\":\"Test post 1\",\"template\":\"post.hbs\",\"status\":\"draft\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
+            
+            newCompileHome = require("../lib/compile-home");
+
+            newCompileHome(rootPath).then(done, errorStub);
+        });
+
+        after(function () {
+            mockery.disable();
         });
 
         it("Should have the correct home page content", function () {

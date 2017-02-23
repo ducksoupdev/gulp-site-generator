@@ -31,7 +31,7 @@ module.exports = {
         }
         var tagLinks = [];
         tags.forEach(function (tag) {
-            tagLinks.push("<a href=\"" + path + "/tag/" + tag + "\">" + tag + "</a>");
+            tagLinks.push("<a href=\"" + path + (path !== "" ? "/": "") + "tag/" + tag + "\">" + tag + "</a>");
         });
         return tagLinks.join("");
     },
@@ -39,7 +39,7 @@ module.exports = {
         if (!tag) {
             return undefined;
         }
-        return "<a href=\"" + path + "/tag/" + tag + "\">" + tag + "</a>";
+        return "<a href=\"" + path + (path !== "" ? "/": "") + "tag/" + tag + "\">" + tag + "</a>";
     },
     getAllTagsAsLinks: function (path, posts) {
         var allTags = {}, allTagsArray = [];
@@ -48,7 +48,7 @@ module.exports = {
                 var tagList = tagObjToArray(post.tagStr);
                 tagList.forEach(function (tag) {
                     if (!allTags[tag]) {
-                        allTags[tag] = path + "/tag/" + tag;
+                        allTags[tag] = path + (path !== "" ? "/": "") + "tag/" + tag;
                     }
                 });
             }

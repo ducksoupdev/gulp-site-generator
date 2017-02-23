@@ -13,6 +13,10 @@
             "encoding": "utf8"
         },
         {
+            "file": ".editorconfig",
+            "encoding": "utf8"
+        },
+        {
             "file": "content/template.md",
             "encoding": "utf8"
         },

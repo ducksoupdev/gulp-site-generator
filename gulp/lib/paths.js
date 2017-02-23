@@ -10,7 +10,7 @@ module.exports = {
     resolve: function (html, path) {
 
         // images
-        html = html.replace(/<img(.+)?src="([^"]+)"(.*)?>/gim, function (match, p1, p2, p3, offset, s) {
+        html = html.replace(/<img(.+)?src="([^"]+)"(.*)?>/gim, function (match, p1, p2, p3) {
             var imagePath = p2;
             if (/^\//.test(imagePath)) {
                 imagePath = path + (path === "" ? p2.substring(1) : p2);
@@ -19,7 +19,7 @@ module.exports = {
         });
 
         // links
-        html = html.replace(/<a(.+)?href="([^"]+)"(.*)?>/gim, function (match, p1, p2, p3, offset, s) {
+        html = html.replace(/<a(.+)?href="([^"]+)"(.*)?>/gim, function (match, p1, p2, p3) {
             var linkPath = p2;
             if (/^\//.test(linkPath)) {
                 linkPath = path + (path === "" ? p2.substring(1) : p2);

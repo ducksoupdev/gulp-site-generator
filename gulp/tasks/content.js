@@ -2,10 +2,9 @@
 
 var gulp = require("gulp"),
     markdownToJson = require("gulp-markdown-to-json"),
-    marked = require("marked"),
-    replace = require("gulp-replace");
+    marked = require("marked");
 
-gulp.task("content", ["copy-assets"], function () {
+gulp.task("content", function () {
     return gulp.src("./src/content/**/*.md")
         .pipe(markdownToJson(marked))
         .pipe(gulp.dest("./build/content"));

@@ -132,10 +132,32 @@ describe("When compiling date pages", function () {
     });
 
     describe("When compiling date pages and excluding draft templates", function () {
+        var minimistStub, newCompileDates;
+        
         before(function (done) {
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+            minimistStub = function () {
+                return {
+                    compile: "published"
+                };
+            };
+            mockery.registerAllowable("../lib/drafts");
+            mockery.registerMock("minimist", minimistStub);
+            
             fs.writeFileSync(rootPath + "/build/content/posts/test-post1.json", "{\"slug\":\"test-post1\",\"title\":\"Test post 1\",\"date\":\"2014-06-11\",\"tags\":\"mocha\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}");
             fs.writeFileSync(rootPath + "/build/content/posts/test-post2.json", "{\"slug\":\"test-post2\",\"title\":\"Test post 2\",\"date\":\"2014-12-05\",\"status\":\"draft\",\"tags\":\"mocha coke\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}");
-            compileDates(rootPath).then(done, errorStub);
+            
+            newCompileDates = require("../lib/compile-dates");
+            
+            newCompileDates(rootPath).then(done, errorStub);
+        });
+
+        after(function () {
+            mockery.disable();
         });
 
         it("Should have the correct date page content for June 2014", function () {

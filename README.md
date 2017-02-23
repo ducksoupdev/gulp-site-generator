@@ -107,7 +107,7 @@ When you have created templates, content and assets, the default task will run t
 
 The following tasks can also be run individually:
 
-* **develop** - a live-reload task for creating and viewing your site where changes are reloaded automatically - view at http://localhost:8080
+* **develop** - a live-reload task for developing your site where changes are reloaded automatically including draft posts and pages - view at http://localhost:8080
 * **sass** - converts sass files to css
 * **clobber** - removes the `build/` directory
 * **server** - view your built site locally at http://localhost:8080

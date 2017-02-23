@@ -1,5 +1,16 @@
 # Change log
 
+## v0.3.0 (2017-02-23)
+
+**Features**
+
+* Change tasks for development - run specific tasks on changes
+* Draft posts/pages are compiled by default in development
+* Uplift npm packages
+* Add editorconfig to installed files
+* Update gitignore
+* Code cleanup
+
 ## v0.2.2 (2017-02-09)
 
 **Fixes**

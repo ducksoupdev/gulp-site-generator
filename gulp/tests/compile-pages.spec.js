@@ -223,26 +223,46 @@ describe("Given pages and posts", function () {
         });
     });
 
-    describe(
-        "When compiling posts and excluding draft templates",
-        function () {
-            before(function (done) {
-                fs.writeFileSync(rootPath +
-                    "/build/content/posts/test-draft-post.json",
-                    "{\"slug\":\"test-draft-post\",\"title\":\"Test draft post\",\"date\":\"2014-06-11\",\"template\":\"post.hbs\",\"status\":\"draft\",\"body\":\"<p>Test draft post content</p>\"}", {
-                        encoding: "utf8"
-                    });
-                compilePages(rootPath).then(done,
-                    errorStub);
+    describe("When compiling posts and excluding draft templates", function () {
+        var minimistStub, newCompilePages;
+        
+        before(function (done) {
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
             });
-
-            it("Should not create the static post",
-                function () {
-                    expect(fs.existsSync(rootPath +
-                        "/build/test-draft-post/index.html"
-                    )).to.be.false;
+            minimistStub = function () {
+                return {
+                    compile: "published"
+                };
+            };
+            mockery.registerAllowable("../lib/drafts");
+            mockery.registerMock("minimist", minimistStub);
+            
+            fs.writeFileSync(rootPath +
+                "/build/content/posts/test-draft-post.json",
+                "{\"slug\":\"test-draft-post\",\"title\":\"Test draft post\",\"date\":\"2014-06-11\",\"template\":\"post.hbs\",\"status\":\"draft\",\"body\":\"<p>Test draft post content</p>\"}", {
+                    encoding: "utf8"
                 });
+
+            newCompilePages = require("../lib/compile-pages");
+
+            newCompilePages(rootPath).then(done,
+                errorStub);
         });
+
+        after(function () {
+            mockery.disable();
+        });
+
+        it("Should not create the static post",
+            function () {
+                expect(fs.existsSync(rootPath +
+                    "/build/test-draft-post/index.html"
+                )).to.be.false;
+            });
+    });
 
     describe("When compiling posts and including tags",
         function () {
@@ -329,12 +349,12 @@ describe("Given pages and posts", function () {
                 "../lib/compile-pages");
 
             newCompilePages(rootPath).then(function () {
-                done();
-            },
-            function (err) {
-                errorStub(err);
-                done();
-            });
+                    done();
+                },
+                function (err) {
+                    errorStub(err);
+                    done();
+                });
         });
 
         it("Should throw a glob error", function () {

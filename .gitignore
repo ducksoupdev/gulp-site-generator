@@ -1,7 +1,6 @@
 node_modules/
 coverage/
-npm-debug.log
-debug.log
+*.log
 .vscode/
 .idea/
 .tmp/

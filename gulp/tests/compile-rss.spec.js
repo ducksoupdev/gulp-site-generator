@@ -59,11 +59,33 @@ describe("Given the RSS feed", function () {
     });
 
     describe("When compiling the RSS feed excluding draft posts", function () {
+        var minimistStub, newCompileRss;
+        
         before(function (done) {
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+            minimistStub = function () {
+                return {
+                    compile: "published"
+                };
+            };
+            mockery.registerAllowable("../lib/drafts");
+            mockery.registerMock("minimist", minimistStub);
+            
             fs.writeFileSync(rootPath + "/build/content/posts/test-post1.json", "{\"slug\":\"test-post1\",\"title\":\"Test post 1\",\"template\":\"post.hbs\",\"date\":\"2015-01-10\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
             fs.writeFileSync(rootPath + "/build/content/posts/test-post2.json", "{\"slug\":\"test-post2\",\"title\":\"Test post 2\",\"template\":\"post.hbs\",\"date\":\"2015-01-20\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
             fs.writeFileSync(rootPath + "/build/content/posts/test-post3.json", "{\"slug\":\"test-post3\",\"title\":\"Test post 3\",\"template\":\"post.hbs\",\"date\":\"2015-01-30\",\"status\":\"draft\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
-            compileRss(rootPath).then(done, errorStub);
+            
+            newCompileRss = require("../lib/compile-rss");
+            
+            newCompileRss(rootPath).then(done, errorStub);
+        });
+
+        after(function () {
+            mockery.disable();
         });
 
         it("Should have the correct RSS content", function () {

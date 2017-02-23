@@ -124,10 +124,32 @@ describe("When compiling tag pages", function () {
     });
 
     describe("When compiling tag pages and excluding draft templates", function () {
+        var minimistStub, newCompileTags;
+        
         before(function (done) {
+            mockery.enable({
+                warnOnReplace: false,
+                warnOnUnregistered: false,
+                useCleanCache: true
+            });
+            minimistStub = function () {
+                return {
+                    compile: "published"
+                };
+            };
+            mockery.registerAllowable("../lib/drafts");
+            mockery.registerMock("minimist", minimistStub);
+
             fs.writeFileSync(rootPath + "/build/content/posts/test-post1.json", "{\"slug\":\"test-post1\",\"title\":\"Test post 1\",\"date\":\"2014-06-11\",\"tags\":\"mocha\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
             fs.writeFileSync(rootPath + "/build/content/posts/test-post2.json", "{\"slug\":\"test-post2\",\"title\":\"Test post 2\",\"date\":\"2014-12-05\",\"status\":\"draft\",\"tags\":\"mocha coke\",\"template\":\"post.hbs\",\"body\":\"<p>Test post content</p>\"}", { encoding: "utf8" });
-            compileTags(rootPath).then(done, errorStub);
+            
+            newCompileTags = require("../lib/compile-tags");
+
+            newCompileTags(rootPath).then(done, errorStub);
+        });
+
+        after(function () {
+            mockery.disable();
         });
 
         it("Should have the correct mocha tag page content", function () {

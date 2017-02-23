@@ -7,7 +7,7 @@ var gulp = require("gulp"),
     rename = require("gulp-rename"),
     fs = require("fs");
 
-gulp.task("uncss", ["compile"], function () {
+gulp.task("uncss", ["copy-css"], function () {
     var siteData = JSON.parse(fs.readFileSync("./site.json", "utf8"));
     var uncssIgnore;
     if (siteData.uncssIgnore) {

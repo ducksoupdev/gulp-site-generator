@@ -2,7 +2,7 @@
 
 var gulp = require("gulp"),
     connect = require("gulp-connect"),
-    gutil = require('gulp-util');
+    gutil = require("gulp-util");
 
 gulp.task("livereload-connect", ["build"], function () {
     connect.server({
@@ -18,13 +18,13 @@ gulp.task("livereload-html", function () {
 
 var _lto = 0;
 gulp.task("livereload-watch", function () {
-    gulp.watch(["./src/sass/**/*.scss"], ["build"]);
-    gulp.watch(["./src/templates/**/*.hbs"], ["build"]);
-    gulp.watch(["./src/js/**/*.js"], ["build"]);
-    gulp.watch(["./src/images/**/*.{gif,jpg,png}"], ["build"]);
-    gulp.watch(["./src/content/**/*.md"], ["build"]);
-    gulp.watch(["./build/**/*.*"]).on('change', function (event) {
-        gutil.log(gutil.colors.green('-'),event.path.replace(process.cwd(),''), gutil.colors.magenta(event.type));
+    gulp.watch(["./src/sass/**/*.scss"], ["uncss"]);
+    gulp.watch(["./src/templates/**/*.hbs"], ["minify-html"]);
+    gulp.watch(["./src/js/**/*.js"], ["concat-js"]);
+    gulp.watch(["./src/images/**/*.{gif,jpg,png}"], ["image-min"]);
+    gulp.watch(["./src/content/**/*.md"], ["minify-html"]);
+    gulp.watch(["./build/**/*.*"]).on("change", function (event) {
+        gutil.log(gutil.colors.green("-"),event.path.replace(process.cwd(),""), gutil.colors.magenta(event.type));
         clearTimeout(_lto);
         _lto = setTimeout(function () {
             gulp.start("livereload-html");
