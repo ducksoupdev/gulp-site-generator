@@ -18,7 +18,8 @@
         },
         {
             "file": "content/template.md",
-            "encoding": "utf8"
+            "encoding": "utf8",
+            "ignoreIfMissing": true
         },
         {
             "file": "content/pages/about.md",

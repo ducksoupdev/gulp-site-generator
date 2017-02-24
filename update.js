@@ -31,6 +31,10 @@ fileList.files.forEach(function (file) {
     var contents = null, isRootFile = file.file.indexOf("/") === -1;
     
     var filePath = (isRootFile ? rootPath + "/" + file.file : rootPath + "/src/" + file.file);
+
+    if (file.hasOwnProperty("ignoreIfMissing") && file["ignoreIfMissing"] && !fs.existsSync(filePath)) {
+        return;
+    }
     
     if (!fs.existsSync(filePath)) {
         if (!isRootFile) {

@@ -1,5 +1,11 @@
 # Change log
 
+## v0.3.2 (2017-02-24)
+
+**Fixes**
+
+* Fix update script to ignore installing `content/template.md` if missing
+
 ## v0.3.1 (2017-02-23)
 
 **Features**
