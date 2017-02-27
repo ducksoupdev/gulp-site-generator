@@ -14,5 +14,8 @@
       "bio": "Practicing the art of front-end development"
     }
   },
-  "imageCompression": true
+  "imageCompression": true,
+  "editor": {
+      "port": 8080
+  }
 }
