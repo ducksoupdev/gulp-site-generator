@@ -1,11 +1,13 @@
 "use strict";
 
-var app = require("../../editor"),
+var gulp = require("gulp"),
+    open = require("gulp-open"),
+    app = require("../../editor"),
     siteJson = require("../../site"),
     debug = require("debug")("express-sample:server"),
     http = require("http");
 
-module.exports.start = function () {
+module.exports.start = function (callback) {
     var port = siteJson.editor.port || 8080;
 
     app.set("port", port);
@@ -15,6 +17,9 @@ module.exports.start = function () {
     server.listen(port);
     server.on("error", onError);
     server.on("listening", onListening);
+
+    // open the browser
+    gulp.src(__filename).pipe(open({uri: "http://localhost:8080"}));
 
     function onError(error) {
         if (error.syscall !== "listen") {
