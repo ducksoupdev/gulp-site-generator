@@ -49,6 +49,7 @@
     "run-sequence": "1.2.2"
   },
   "devDependencies": {
+    "browser-sync": "^2.18.13",
     "chai": "3.5.0",
     "eslint": "3.16.1",
     "github-changes": "1.0.4",
