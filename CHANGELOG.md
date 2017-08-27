@@ -1,5 +1,13 @@
 # Change log
 
+## v0.4.0 (2017-08-27)
+
+**Features**
+
+* Replace livereload with browser-sync [#35]
+* Replace uncss with sass in develop task [#35]
+* Uplift npm packages
+
 ## v0.3.2 (2017-02-24)
 
 **Fixes**

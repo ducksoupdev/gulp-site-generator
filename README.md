@@ -188,6 +188,6 @@ Helpers are available to your Handlebar templates and partials, these are:
 
 ## Further information
 
-The example site is a good place to start and shows a basic structure of a site with templates and content.
+The [example site](https://github.com/ducksoupdev/gulp-site-generator-example) is a good place to start and shows a basic structure of a site with templates and content.
 
 If you encounter any issues or have any feedback, please [send me a tweet](http://twitter.com/ducksoupdev) or raise a bug on the issue tracker.
