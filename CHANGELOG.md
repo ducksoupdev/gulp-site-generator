@@ -1,5 +1,11 @@
 # Change log
 
+## v0.4.1 (2017-08-27)
+
+**Fixes**
+
+* Fix `gulp-mocha` to v3.0.1 to ensure `istanbul` coverage is generated
+
 ## v0.4.0 (2017-08-27)
 
 **Features**
